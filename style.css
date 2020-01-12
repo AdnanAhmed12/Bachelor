@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 /*html, body{
   height: 100%;
 } */
@@ -24,6 +25,7 @@ header {
   top: 0px;
   margin: 0px;
   height: 50px;
+  z-index: 2;
 }
 
 #cart {
@@ -42,20 +44,21 @@ header {
 }
 
 
-#cart_link :hover{
+#cart_link :hover {
   background-color: #2bd9fe
 }
 
-#logo{
+#logo {
   position: absolute;
   height: 70px;
   background-color: #3aaed8;
   left: 5%;
   padding-left: 5px;
   padding-right: 5px;
+  z-index: 3;
 }
 
-#logo h1{
+#logo h1 {
   color: white;
   margin: 0;
   padding: 0;
@@ -73,7 +76,7 @@ header {
 #search button {
   background-color: #52aa5e;
   border: 2px solid white;
-  padding: 2px;
+  padding: 3px;
   cursor: pointer;
 }
 
@@ -88,20 +91,87 @@ header {
 }
 
 main {
-  margin-top: 200px;
+  position: relative;
+  padding-top: 200px;
+  width: 80%;
+  min-width: 800px;
+  max-width: 1200px;
 }
 
 main h2 {
   background-color: #52aa5e;
-  width: 70%;
   margin: 0px;
   margin-left: 5%;
+  margin-bottom: 10px;
   padding-left: 10px;
   color: white;
 }
 
-#a{
-  position: absolute;
-  top: 0px;
-  left: 30%;
+#offers {
+  width: 90%;
+  padding: 0px;
+  margin: 0px;
+  margin-left: 10%;
+  min-width: 210px;
+}
+
+.offer {
+  display: inline-block;
+  overflow: auto;
+  margin: 1%;
+  width: 45%;
+}
+
+.offer:hover {
+    background-color: #2bd9fe;
+    color: white;
+}
+
+.left {
+  display: flex;
+  padding: 1%;
+  float: left;
+}
+
+.right {
+  padding: 0.5%;
+  text-align: center;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.name {
+  margin: 0px;
+  padding: 0px;
+  padding-top: 1%;
+  height: 80px;
+  overflow: auto;
+}
+
+.price {
+  padding-top: 3%;
+}
+
+#offers a {
+  text-decoration: none;
+  color: black;
+}
+
+aside {
+  position: fixed;
+  float: right;
+  top: 185px;
+  left: 85%;
+  width: 12%;
+  background-color: #52aa8a;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+#tags{
+  padding-left: 10%;
+}
+
+.row {
+  float: left;
+  clear:left;
 }
