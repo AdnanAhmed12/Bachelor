@@ -183,7 +183,7 @@ aside {
   padding-left: 10%;
 }
 
-#tags input,label {
+#tags input,#tags label {
   float: left;
 }
 
@@ -320,7 +320,7 @@ main{
 .sum{
   padding-left: 45%;
 }
- 
+
 main .submit{
   width: 100%;
   background-color:#52aa5e;
@@ -332,4 +332,53 @@ main .submit{
 }
 ul{
   list-style-type: none;
+}
+
+#buy_info {
+  border: 2px solid #52aa5e;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+#image {
+  float: left;
+}
+
+#info {
+  text-align: center;
+  height: 360px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#price {
+  margin-top: 5%;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+#number {
+  margin-top: 5%;
+  width: 35px;
+  margin-left: 1%;
+}
+
+#buy {
+  display: block;
+  margin: auto;
+  margin-top: 5%;
+  padding: 7px 20%;
+  background-color: #52aa5e;
+  border: none;
+  color: white;
+  font-weight: bold;
+}
+
+#name {
+  height: 70px;
+  overflow: auto;
+}
+
+#dummy {
+  width: 90%;
+  padding-left: 5%;
 }

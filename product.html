@@ -7,24 +7,37 @@
 </head>
 <body>
   <header>
+    <a href="index.html">
     <div id="logo">
       <h1>WEB-STORE</h1>
     </div>
+  </a>
     <a id ="cart_link" href="kart.html">
       <div id="cart">
          <img src="static/cart.png" alt="cart" width="30px" height="30px">
       </div>
     </a>
+    <div id="search">
+      <input type="text" name="search" value="" placeholder="Search">
+      <div id="button_wrapper"><button><img src="static/glass.png" alt="cart" width="20px" height="12px"></button></div>
+    </div>
   </header>
   <main>
-    <h2>title</h2>
-    image <br>
-    name <br>
-    price
-    <button type="button" name="button">Add to Cart</button>
-    <div class="description">
-      description
+    <div id="buy_info">
+      <img id="image" src="static/placeholder.png" alt="" width="40%" height="360px">
+      <form id="info" action="" method="GET">
+        <div id ="name"><h3>Name of the product that is in this picture.</h3></div>
+        <h3 id="price">Price: 1000 NOK</h3>
+        <label for="quant">Quantity</label>
+        <input id="number" type="number" name="quant" value="1" max="9" min="1">
+        <input id="buy" type="submit" name="buy" value="BUY">
+      </form>
     </div>
+    <h2>Details</h2>
+    <div id="dummy">
+    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
+Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. </p>
+   </div>
  </main>
  <footer>
    <div id="footer_text">
