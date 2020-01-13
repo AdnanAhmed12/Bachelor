@@ -95,19 +95,26 @@ header {
 main {
   position: relative;
   padding-top: 200px;
-  
-  min-width: 800px;
+  margin: auto;
   max-width: 1200px;
+  min-width: 800px;
   min-height: calc(100vh - 100px);
+}
+
+#index_main main{
+  margin: inherit;
 }
 
 main h2 {
   background-color: #52aa5e;
   margin: 0px;
-  margin-left: 5%;
   margin-bottom: 10px;
   padding-left: 10px;
   color: white;
+}
+
+#index_main h2 {
+  margin-left: 5%;
 }
 
 #offers {
@@ -268,7 +275,7 @@ footer p{
 
 #Register .input {
   width: 100%;
-  padding: 12px 20px; 
+  padding: 12px 20px;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -283,7 +290,7 @@ footer p{
   border-radius: 4px;
 }
 main{
-  
+
 }
 #wrapper{
   margin: auto;
