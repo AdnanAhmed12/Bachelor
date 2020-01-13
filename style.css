@@ -174,7 +174,7 @@ aside {
   padding-left: 10%;
 }
 
-#tags input,label {
+#tags input,label t{
   float: left;
 }
 
@@ -191,4 +191,64 @@ aside {
   clear: left;
   left: 40%;
   transform: translate(-40%, 0%);
+}
+#Register{
+  padding-right: 10%;
+}
+
+#Register #field{
+ /* display: inline-block;*/
+  position: fixed;
+  float: right;
+  top: 15%;
+  right: 5%;
+  width: 40%;
+}
+
+#login{
+  position: fixed;
+  top: 15%;
+  left: 5%;
+  width: 40%;
+  float: left;
+}
+#login .input{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#login .submit{
+  width: 100%;
+  background-color: #52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+}
+
+#Register .input {
+  width: 100%;
+  padding: 12px 20px; 
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#Register .submit{
+  width: 100%;
+  background-color:#52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+}
+main{
+  width: 100%;
+}
+#wrapper{
+  margin: auto;
 }

@@ -21,38 +21,67 @@
     </div>
   </header>
   <main>
-    <form class="" action="" method="GET">
-      <fieldset>
+    <div id="wrapper">
+    <div id="login">
+    <form action="" method="GET">
+       <fieldset id="field">
         <legend>Log In</legend>
-        <label for="user">username</label>
-        <input type="text" name="user" value="">
-        <label for="password">password</label>
-        <input type="text" name="password" value="">
+        <label for="user" class : input>Username: </label>
+        <br>
+        <input type="text" name="user" value="" placeholder="Username" id="login-username" class="input">
+        <br>
+        <label for="password" class="password">password: </label>
+        <br>
+        <input type="text" name="password" value="" placeholder="password" class="input">
+        <br>
+        <br>
+      <input type="submit" name="logg in" value="Log in" class="submit">
       </fieldset>
-      <input type="submit" name="log in" value="Log In">
     </form>
+  </div>
+</div>
+  <div id="wrapper">
+  <div id="Register">
     <form class="" action="" method="GET">
-      <fieldset>
+        <fieldset id="field">
         <legend>Register</legend>
-        <label for="first_name">first name</label>
-        <input type="text" name="first_name" value="">
+        <label for="first_name">first name:</label>
+        <br>
+        <input type="text" name="first_name" value="" class="input">
+        <br>
         <label for="last_name">last name</label>
-        <input type="text" name="last_name" value="">
+        <br>
+        <input type="text" name="last_name" value="" class="input">
+        <br>
         <label for="country">country</label>
-        <input type="country" name="country" value="">
+        <br>
+        <input type="text" name="country" value="" class="input">
+        <br>
         <label for="post_code">post code</label>
-        <input type="text" name="post_code" value="">
+        <br>
+        <input type="text" name="post_code" value="" class="input">
+        <br>
         <label for="address">post code</label>
-        <input type="text" name="address" value="">
+        <br>
+        <input type="text" name="address" value="" class="input">
+        <br>
         <label for="user">username</label>
-        <input type="text" name="user" value="">
+        <br>
+        <input type="text" name="user" value="" class="input">
+        <br>
         <label for="password">password</label>
-        <input type="text" name="password" value="">
+        <br>
+        <input type="text" name="password" value="" class="input">
+        <br>
         <label for="conf_password">confirm password</label>
-        <input type="text" name="conf_password" value="">
+        <br>
+        <input type="text" name="conf_password" value="" class="input">
+        <br>
+      <input type="submit" name="Register" value="Register" class="submit">
       </fieldset>
-      <input type="submit" name="Register" value="Register">
     </form>
+  </div>
+</div>
   </main>
   <footer>
     Copyright 2020
