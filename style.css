@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 /*html, body{
   height: 100%;
 } */
@@ -163,15 +164,31 @@ aside {
   left: 85%;
   width: 12%;
   background-color: #52aa8a;
+  color: white;
   text-align: center;
   padding-bottom: 10px;
+  font-family: 'Roboto', sans-serif;
 }
 
 #tags{
   padding-left: 10%;
 }
 
-.row {
+#tags input,label {
   float: left;
-  clear:left;
+}
+
+#tags label {
+  clear: left;
+  width: 70%;
+  height: 30px;
+  text-align: left;
+}
+
+#apply {
+  position: relative;
+  float: left;
+  clear: left;
+  left: 40%;
+  transform: translate(-40%, 0%);
 }
