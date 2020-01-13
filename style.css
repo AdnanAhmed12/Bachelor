@@ -175,7 +175,7 @@ aside {
   padding-left: 10%;
 }
 
-#tags input,label t{
+#tags input,label {
   float: left;
 }
 
@@ -235,14 +235,14 @@ footer p{
  /* display: inline-block;*/
   position: fixed;
   float: right;
-  top: 15%;
+  top: 12%;
   right: 5%;
   width: 40%;
 }
 
 #login{
   position: fixed;
-  top: 15%;
+  top: 12%;
   left: 5%;
   width: 40%;
   float: left;
@@ -286,4 +286,19 @@ main{
 }
 #wrapper{
   margin: auto;
+}
+#Register label{
+  padding: 0.5%;
+  font-family: 'Roboto', sans-serif;
+}
+#login label {
+  padding: 0.5%;
+  font-family: 'Roboto', sans-serif;
+}
+#Register legend{
+  font-family: 'Roboto', sans-serif;
+
+}
+#login legend{
+  font-family: 'Roboto', sans-serif;
 }
