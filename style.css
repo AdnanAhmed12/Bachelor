@@ -95,7 +95,7 @@ header {
 main {
   position: relative;
   padding-top: 200px;
-  width: 80%;
+  
   min-width: 800px;
   max-width: 1200px;
   min-height: calc(100vh - 100px);
@@ -227,4 +227,79 @@ footer p{
   right: 50%;
   top: 50%;
   transform: translate(50%,-50%);
+}
+#Register{
+  padding-right: 10%;
+}
+
+#Register #field{
+ /* display: inline-block;*/
+  position: absolute;
+  float: right;
+  top: 12%;
+  right: 0%;
+  width: 40%;
+}
+
+#login{
+  position: relative;
+  top: 12%;
+  left: 5%;
+  width: 40%;
+  float: left;
+}
+#login .input{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#login .submit{
+  width: 100%;
+  background-color: #52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+}
+
+#Register .input {
+  width: 100%;
+  padding: 12px 20px; 
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#Register .submit{
+  width: 100%;
+  background-color:#52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+}
+main{
+  
+}
+#wrapper{
+  margin: auto;
+}
+#Register label{
+  padding: 0.5%;
+  font-family: 'Roboto', sans-serif;
+}
+#login label {
+  padding: 0.5%;
+  font-family: 'Roboto', sans-serif;
+}
+#Register legend{
+  font-family: 'Roboto', sans-serif;
+
+}
+#login legend{
+  font-family: 'Roboto', sans-serif;
 }
