@@ -13,8 +13,8 @@ html, body{
 }
 
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
 }
 
 h1, h2, h3 {
@@ -28,13 +28,13 @@ header {
   top: 0px;
   margin: 0px;
   height: 50px;
-  z-index: 2;
+  z-index: 4;
 }
 
 #cart {
   position: absolute;
   top: 50%;
-  left: 90%;
+  left: 80%;
   transform: translate(0%,-50%);
   height: 30px;
   margin: 0px;
@@ -44,7 +44,6 @@ header {
   padding-left: 5px;
   padding-right: 5px;
 }
-
 
 #cart_link :hover {
   background-color: #2bd9fe
@@ -57,7 +56,7 @@ header {
   left: 5%;
   padding-left: 5px;
   padding-right: 5px;
-  z-index: 3;
+  z-index: 5;
 }
 
 #logo h1 {
@@ -92,10 +91,28 @@ header {
   background-color: #2bd9fe
 }
 
+#logout {
+  position: absolute;
+  top: 50%;
+  left: 90%;
+  transform: translate(0%,-50%);
+  padding: 5px;
+  background-color: #52aa5e;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#logout:hover{
+  background-color: #2bd9fe
+}
+
 main {
   position: relative;
   padding-top: 200px;
   margin: auto;
+  width: 80%;
   max-width: 1200px;
   min-width: 800px;
   min-height: calc(100vh - 100px);
@@ -132,13 +149,7 @@ main h2 {
   width: 45%;
 }
 
-.offer:hover {
-    background-color: #2bd9fe;
-    color: white;
-}
-
 .left {
-  display: flex;
   padding: 1%;
   float: left;
 }
@@ -155,6 +166,10 @@ main h2 {
   padding-top: 1%;
   height: 80px;
   overflow: auto;
+}
+
+.name:hover {
+  text-decoration: underline;
 }
 
 .price {
@@ -183,7 +198,7 @@ aside {
   padding-left: 10%;
 }
 
-#tags input,#tags label {
+#tags input, #tags label {
   float: left;
 }
 
@@ -205,6 +220,8 @@ aside {
   border: 1px solid white;
   cursor: pointer;
   font-weight: bold;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 #apply:hover{
@@ -235,35 +252,27 @@ footer p{
   top: 50%;
   transform: translate(50%,-50%);
 }
-#Register{
-  padding-right: 10%;
-}
 
-#Register #field{
- /* display: inline-block;*/
-  position: absolute;
+#Register{
+  display: inline-block;
   float: right;
-  top: 12%;
-  right: 0%;
-  width: 40%;
+  width: 45%;
 }
 
 #login{
-  position: relative;
-  top: 12%;
-  left: 5%;
-  width: 40%;
-  float: left;
+  display: inline-block;
+  width: 45%;
 }
-#login .input{
+
+#login .input {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
-  display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
+
 #login .submit{
   width: 100%;
   background-color: #52aa5e;
@@ -271,6 +280,7 @@ footer p{
   margin: 8px 0;
   border: none;
   border-radius: 4px;
+  color: white;
 }
 
 #Register .input {
@@ -281,6 +291,7 @@ footer p{
   border-radius: 4px;
   box-sizing: border-box;
 }
+
 #Register .submit{
   width: 100%;
   background-color:#52aa5e;
@@ -288,50 +299,37 @@ footer p{
   margin: 8px 0;
   border: none;
   border-radius: 4px;
+  color: white;
 }
-main{
 
+.submit{
+  cursor: pointer;
 }
-#wrapper{
-  margin: auto;
+
+#login .submit:hover {
+    background-color: #2bd9fe;
 }
+
+#Register .submit:hover {
+  background-color: #2bd9fe;
+}
+
 #Register label{
   padding: 0.5%;
   font-family: 'Roboto', sans-serif;
 }
+
 #login label {
   padding: 0.5%;
   font-family: 'Roboto', sans-serif;
 }
+
 #Register legend{
   font-family: 'Roboto', sans-serif;
-
 }
+
 #login legend{
   font-family: 'Roboto', sans-serif;
-}
-.navn, .pris{
-  float: right;
-  padding-right:20%;
-}
-.bilde,.navn, .pris{
-  display: inline-block;
-}
-.sum{
-  padding-left: 45%;
-}
-
-main .submit{
-  width: 100%;
-  background-color:#52aa5e;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-
-}
-ul{
-  list-style-type: none;
 }
 
 #buy_info {
@@ -371,6 +369,11 @@ ul{
   border: none;
   color: white;
   font-weight: bold;
+  cursor: pointer;
+}
+
+#buy:hover{
+  background-color: #2bd9fe
 }
 
 #name {
@@ -381,4 +384,72 @@ ul{
 #dummy {
   width: 90%;
   padding-left: 5%;
+  padding-bottom: 60px;
+}
+
+#list {
+  width: 90%;
+  margin: auto;
+  padding-bottom: 0px;
+}
+
+.element {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 200px;
+  line-height: 200px;
+  border-bottom: 2px solid #52aa5e;
+}
+
+#total {
+  background-color: #52aa5e;
+  padding-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: white;
+}
+
+.element h3, #total h3{
+  padding-right: 10px;
+}
+
+#list button {
+  display: block;
+  margin: auto;
+  margin-top: 40px;
+  padding: 10px;
+  width: 50%;
+  background-color: #52aa5e;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+#list button:hover {
+  background-color:#2bd9fe;
+}
+
+.cart_name{
+  cursor: pointer;
+}
+
+.cart_name:hover{
+  text-decoration: underline;
+}
+
+#details {
+  display: table;
+  width: 50%;
+  margin: auto;
+}
+
+#left_column, #right_column {
+  display: table-cell;
+}
+
+#right_column{
+  text-align: right;
 }

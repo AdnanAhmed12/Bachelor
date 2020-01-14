@@ -10,77 +10,50 @@
     <div id="logo">
       <h1>WEB-STORE</h1>
     </div>
-    <a id ="cart_link" href="kart.html">
-      <div id="cart">
-         <img src="static/cart.png" alt="cart" width="30px" height="30px">
-      </div>
-    </a>
-    <div id="search">
-      <input type="text" name="search" value="" placeholder="Search">
-      <div id="button_wrapper"><button><img src="static/glass.png" alt="cart" width="20px" height="12px"></button></div>
-    </div>
   </header>
   <main>
-    <div id="wrapper">
     <div id="login">
     <form action="" method="GET">
-       <fieldset id="field">
+       <fieldset>
         <legend>Log In</legend>
         <label for="user" class :>Username: </label>
-        <br>
         <input type="text" name="user" value="" placeholder="Username" id="login-username" class="input">
-        <br>
         <label for="password" class="password">Password: </label>
-        <br>
         <input type="text" name="password" value="" placeholder="password" class="input">
-        <br>
-        <br>
       <input type="submit" name="logg in" value="Log in" class="submit">
       </fieldset>
     </form>
-  </div>
 </div>
-  <div id="wrapper">
   <div id="Register">
     <form class="" action="" method="GET">
-        <fieldset id="field">
+        <fieldset>
         <legend>Register</legend>
         <label for="first_name">First name:</label>
-        <br>
         <input type="text" name="first_name" value="" class="input" placeholder="First name">
-        <br>
         <label for="last_name">Last name:</label>
-        <br>
         <input type="text" name="last_name" value="" class="input" placeholder="Last name">
-        <br>
         <label for="country">Country:</label>
-        <br>
-        <input type="text" name="country" value="" class="input" placeholder="Country">
-        <br>
-        <label for="address">Post code:</label>
-        <br>
+        <input type="country" name="country" value="" class="input" placeholder="Country">
+        <label for="city">City:</label>
+        <input type="text" name="city" value="" class="input" placeholder="Country">
+        <label for="address">Address:</label>
         <input type="text" name="address" value="" class="input" placeholder="Address">
-        <br>
         <label for="user">Username:</label>
-        <br>
         <input type="text" name="user" value="" class="input" placeholder="Username">
-        <br>
         <label for="password">Password:</label>
-        <br>
         <input type="text" name="password" value="" class="input" placeholder="Password">
-        <br>
-        <label for="conf_password">Confirm password:</label>
-        <br>
+       <label for="conf_password">Confirm password:</label>
         <input type="text" name="conf_password" value="" class="input" placeholder="Confirm">
-        <br>
       <input type="submit" name="Register" value="Register" class="submit">
       </fieldset>
     </form>
-  </div>
 </div>
   </main>
   <footer>
-    Copyright 2020
+    <div id="footer_text">
+    <p>Email: webstore@mail.com</p>
+    <p>Copyright: Web-Store Inc 2020</p>
+  </div>
   </footer>
 </body>
 </html>

@@ -7,30 +7,52 @@
 </head>
 <body>
   <header>
+    <a href="index.html">
     <div id="logo">
       <h1>WEB-STORE</h1>
     </div>
-    < a id ="cart_link" href="kart.html">
+  </a>
+    <a id ="cart_link" href="kart.html">
       <div id="cart">
          <img src="static/cart.png" alt="cart" width="30px" height="30px">
       </div>
     </a>
+    <div id="search">
+      <form action="" method="GET">
+      <input type="text" name="search" value="" placeholder="Search">
+      <div id="button_wrapper"><button type="submit"><img src="static/glass.png" alt="cart" width="20px" height="12px"></button></div>
+    </form>
+    </div>
+    <button id="logout" type="button" name="logout">LOG OUT</button>
   </header>
   <main>
     <h2>Kart</h2>
-    <ul>
-      <li>
-       <img src="spyro.png" alt="spyro" style="width: 10%; height: 15%;" class="bilde"><p class="navn"> Vare navn: Spyro</p> <p class="pris">pris: 500 kr </p>
-      </li>
-      <li>
-       <img src="game1.png" alt="Zelda" style="width: 10%; height: 15%;" class="bilde"><p class="navn">Vare navn: Zelda</p> <p class="pris">pris: 400 kr </p>
-      </li>
-      <li>  
-      <img src="game2.jpg" alt="mario" style="width: 10%; height: 15%;" class="bilde"> <p class="navn">Vare navn: Mario</p> <p class="pris">pris :300 kr </p>
-      </li>
-    </ul>
-    <strong class="sum">Sum : 1200 kr</strong>: <br>
-     <input type="submit" name="Buy" value="Buy" class="submit">
+    <div id="list">
+      <article class="element">
+        <img src="static/game1.png" alt="Zelda" width="20%" height="170px">
+        <h3 class="cart_name">Legend of Zelda: Link's Awakening</h3>
+        <h3>&#215;1</h3>
+        <h3>399 NOK</h3>
+      </article>
+      <article class="element">
+        <img src="static/game1.png" alt="Zelda" width="20%" height="170px">
+        <h3 class="cart_name">Legend of Zelda: Link's Awakening</h3>
+        <h3>&#215;1</h3>
+        <h3>399 NOK</h3>
+      </article>
+      <article class="element">
+        <img src="static/game1.png" alt="Zelda" width="20%" height="170px">
+        <h3 class="cart_name">Legend of Zelda: Link's Awakening</h3>
+        <h3>&#215;1</h3>
+        <h3>399 NOK</h3>
+      </article>
+      <article id="total">
+        <h3>Total: 1197 NOK</h3>
+      </article>
+      <form class="" action="" method="GET">
+        <button type="button" name="button">BUY</button>
+      </form>
+    </div>
  </main>
  <footer>
    <div id="footer_text">

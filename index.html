@@ -7,80 +7,73 @@
 </head>
 <body>
   <header>
+    <a href="index.html">
     <div id="logo">
       <h1>WEB-STORE</h1>
     </div>
+  </a>
     <a id ="cart_link" href="kart.html">
       <div id="cart">
          <img src="static/cart.png" alt="cart" width="30px" height="30px">
       </div>
     </a>
     <div id="search">
+      <form action="" method="GET">
       <input type="text" name="search" value="" placeholder="Search">
-      <div id="button_wrapper"><button><img src="static/glass.png" alt="cart" width="20px" height="12px"></button></div>
+      <div id="button_wrapper"><button type="submit"><img src="static/glass.png" alt="cart" width="20px" height="12px"></button></div>
+    </form>
     </div>
+    <button id="logout" type="button" name="logout">LOG OUT</button>
   </header>
   <div id="index_main">
-  <main>
+ <main>
     <h2>Newest Deals</h2>
      <div id="offers">
-      <a href="product.html">
         <article class="offer">
            <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
            <div class="right">
-             <div class="name">Name of the product that is in this picture.</div>
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
              <h4 class="price">1000 NOK</h4>
            </div>
         </article>
-      </a>
-      <a href="product.html">
-       <article class="offer">
-          <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-          <div class="right">
-            <div class="name">Name of the product that is in this picture.</div>
-            <h4 class="price">1000 NOK</h4>
-          </div>
-       </article>
-      </a>
-      <a href="product.html">
-       <article class="offer">
-          <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-          <div class="right">
-            <div class="name">Name of the product that is in this picture.</div>
-            <h4 class="price">1000 NOK</h4>
-          </div>
-       </article>
-     </a>
-     <a href="product.html">
-      <article class="offer">
-          <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-          <div class="right">
-            <div class="name">Name of the product that is in this picture.</div>
-            <h4 class="price">1000 NOK</h4>
-          </div>
-      </article>
-    </a>
-    <a href="product.html">
-      <article class="offer">
-          <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-          <div class="right">
-            <div class="name">Name of the product that is in this picture.</div>
-            <h4 class="price">1000 NOK</h4>
-          </div>
-      </article>
-    </a>
-    <a href="product.html">
-      <article class="offer">
-          <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-          <div class="right">
-            <div class="name">Name of the product that is in this picture.</div>
-            <h4 class="price">1000 NOK</h4>
-          </div>
-      </article>
-    </a>
+        <article class="offer">
+           <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+           <div class="right">
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
+             <h4 class="price">1000 NOK</h4>
+           </div>
+        </article>
+        <article class="offer">
+           <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+           <div class="right">
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
+             <h4 class="price">1000 NOK</h4>
+           </div>
+        </article>
+        <article class="offer">
+           <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+           <div class="right">
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
+             <h4 class="price">1000 NOK</h4>
+           </div>
+        </article>
+        <article class="offer">
+           <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+           <div class="right">
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
+             <h4 class="price">1000 NOK</h4>
+           </div>
+        </article>
+        <article class="offer">
+           <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+           <div class="right">
+             <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
+             <h4 class="price">1000 NOK</h4>
+           </div>
+        </article>
   </div>
   </main>
-  </div>
+</div>
 <aside class="categories">
     <h3>Categories</h3>
     <form id="tags" action="index.html" method="post">
@@ -90,7 +83,6 @@
       <label for="fashion">Fashion: </label><input type="checkbox" name="fashion" value="">
       <label for="sports">Sports: </label><input type="checkbox" name="sports" value="">
       <label for="media">Media: </label><input type="checkbox" name="media" value="">
-      <label for="literature">Literature: </label><input type="checkbox" name="literature" value="">
       <input id="apply" type="submit" name="apply" value="Apply">
     </form>
   </aside>
