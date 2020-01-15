@@ -12,40 +12,42 @@
     </div>
   </header>
   <main>
-    <div id="login">
+    <div id="login" class="logreg">
+    <h2>Log In</h2>
     <form action="" method="GET">
-       <fieldset>
-        <legend>Log In</legend>
-        <label for="user" class :>Username: </label>
-        <input type="text" name="user" value="" placeholder="Username" id="login-username" class="input">
+        <label for="user">Username: </label>
+        <input type="text" name="user" value="" placeholder="Username">
         <label for="password" class="password">Password: </label>
-        <input type="text" name="password" value="" placeholder="password" class="input">
-      <input type="submit" name="logg in" value="Log in" class="submit">
-      </fieldset>
+        <input type="password" name="password" value="" placeholder="password">
+      <input type="submit" name="log in" value="Log in" class="submit">
     </form>
 </div>
-  <div id="Register">
+  <div class="logreg">
+    <h2>Register</h2>
     <form class="" action="" method="GET">
-        <fieldset>
-        <legend>Register</legend>
         <label for="first_name">First name:</label>
-        <input type="text" name="first_name" value="" class="input" placeholder="First name">
+        <input type="text" name="first_name" value="" placeholder="First name">
         <label for="last_name">Last name:</label>
-        <input type="text" name="last_name" value="" class="input" placeholder="Last name">
-        <label for="country">Country:</label>
-        <input type="country" name="country" value="" class="input" placeholder="Country">
+        <input type="text" name="last_name" value=""placeholder="Last name">
         <label for="city">City:</label>
-        <input type="text" name="city" value="" class="input" placeholder="Country">
+        <input type="text" name="city" value="" placeholder="Country">
         <label for="address">Address:</label>
-        <input type="text" name="address" value="" class="input" placeholder="Address">
+        <input type="text" name="address" value=""  placeholder="Address">
+        <label for="country">Country:</label>
+        <select name="country">
+          <option value="1">Norway</option>
+          <option value="2">Sweden</option>
+          <option value="3">Danmark</option>
+          <option value="4">Finland</option>
+          <option value="5">Iceland</option>
+        </select>
         <label for="user">Username:</label>
-        <input type="text" name="user" value="" class="input" placeholder="Username">
+        <input type="text" name="user" value=""  placeholder="Username">
         <label for="password">Password:</label>
-        <input type="text" name="password" value="" class="input" placeholder="Password">
-       <label for="conf_password">Confirm password:</label>
-        <input type="text" name="conf_password" value="" class="input" placeholder="Confirm">
+        <input type="password" name="password" value=""  placeholder="Password">
+        <label for="conf_password">Confirm password:</label>
+        <input type="password" name="conf_password" value="" class="input" placeholder="Confirm">
       <input type="submit" name="Register" value="Register" class="submit">
-      </fieldset>
     </form>
 </div>
   </main>

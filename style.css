@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 /*Colors:
   dark green : #388659
   light green: #52aa5e
@@ -17,7 +18,7 @@ body {
   padding: 0px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-family: "Tahoma", Geneva, sans-serif
 }
 
@@ -26,18 +27,22 @@ header {
   width: 100%;
   background-color: #52aa5e;
   top: 0px;
-  margin: 0px;
   height: 50px;
   z-index: 4;
+  min-width: 1100px;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 110%;
 }
 
 #cart {
   position: absolute;
   top: 50%;
-  left: 80%;
+  left: 85%;
   transform: translate(0%,-50%);
   height: 30px;
-  margin: 0px;
   border: 2px solid white;
   padding-top: 3px;
   padding-bottom: 3px;
@@ -45,7 +50,7 @@ header {
   padding-right: 5px;
 }
 
-#cart_link :hover {
+#cart:hover {
   background-color: #2bd9fe
 }
 
@@ -74,20 +79,21 @@ header {
   transform: translate(-50%,-50%);
 }
 
-#search button {
+#search_button {
   background-color: #52aa5e;
   border: 2px solid white;
-  padding: 3px;
+  padding: 5px;
   cursor: pointer;
+  font-weight: bold;
+  color: white;
 }
 
-#button_wrapper {
-  margin: 0px;
-  padding: 0px;
-  display: inline-block;
+#search_label {
+  padding: 5px;
+  width: 250px;
 }
 
-#button_wrapper :hover {
+#search_button:hover {
   background-color: #2bd9fe
 }
 
@@ -109,7 +115,6 @@ header {
 }
 
 main {
-  position: relative;
   padding-top: 200px;
   margin: auto;
   width: 80%;
@@ -119,34 +124,27 @@ main {
 }
 
 #index_main main{
-  margin: inherit;
+  margin-left: 3%;
 }
 
 main h2 {
   background-color: #52aa5e;
   margin: 0px;
-  margin-bottom: 10px;
-  padding-left: 10px;
+  padding: 10px;
   color: white;
-}
-
-#index_main h2 {
-  margin-left: 5%;
 }
 
 #offers {
   width: 90%;
   padding: 0px;
-  margin: 0px;
-  margin-left: 10%;
-  min-width: 210px;
+  margin: auto;
 }
 
 .offer {
   display: inline-block;
   overflow: auto;
   margin: 1%;
-  width: 45%;
+  width: 47%;
 }
 
 .left {
@@ -189,21 +187,24 @@ aside {
   width: 12%;
   background-color: #52aa8a;
   color: white;
-  text-align: center;
   padding-bottom: 10px;
   font-family: 'Roboto', sans-serif;
+  min-width: 130px;
+}
+
+aside h3{
+  text-align: center;
 }
 
 #tags{
-  padding-left: 10%;
+  margin-left: 10%;
 }
 
-#tags input, #tags label {
+#tags input[type=checkbox], #tags label {
   float: left;
 }
 
 #tags label {
-  clear: left;
   width: 70%;
   height: 30px;
   text-align: left;
@@ -211,8 +212,6 @@ aside {
 
 #apply {
   position: relative;
-  float: left;
-  clear: left;
   left: 40%;
   transform: translate(-40%, 0%);
   background-color: #52aa8a;
@@ -238,7 +237,6 @@ footer{
   padding-top: 30px;
   padding-bottom: 30px;
   background-color: #388659;
-  font-family: 'Roboto', sans-serif;
 }
 
 footer p{
@@ -251,85 +249,6 @@ footer p{
   right: 50%;
   top: 50%;
   transform: translate(50%,-50%);
-}
-
-#Register{
-  display: inline-block;
-  float: right;
-  width: 45%;
-}
-
-#login{
-  display: inline-block;
-  width: 45%;
-}
-
-#login .input {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-#login .submit{
-  width: 100%;
-  background-color: #52aa5e;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  color: white;
-}
-
-#Register .input {
-  width: 100%;
-  padding: 12px 20px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-#Register .submit{
-  width: 100%;
-  background-color:#52aa5e;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  color: white;
-}
-
-.submit{
-  cursor: pointer;
-}
-
-#login .submit:hover {
-    background-color: #2bd9fe;
-}
-
-#Register .submit:hover {
-  background-color: #2bd9fe;
-}
-
-#Register label{
-  padding: 0.5%;
-  font-family: 'Roboto', sans-serif;
-}
-
-#login label {
-  padding: 0.5%;
-  font-family: 'Roboto', sans-serif;
-}
-
-#Register legend{
-  font-family: 'Roboto', sans-serif;
-}
-
-#login legend{
-  font-family: 'Roboto', sans-serif;
 }
 
 #buy_info {
@@ -390,7 +309,6 @@ footer p{
 #list {
   width: 90%;
   margin: auto;
-  padding-bottom: 0px;
 }
 
 .element {
@@ -398,13 +316,18 @@ footer p{
   align-items: center;
   justify-content: space-between;
   height: 200px;
-  line-height: 200px;
   border-bottom: 2px solid #52aa5e;
+}
+
+.element a {
+  text-decoration: none;
+  color: black;
 }
 
 #total {
   background-color: #52aa5e;
   padding-top: 5px;
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -452,4 +375,69 @@ footer p{
 
 #right_column{
   text-align: right;
+}
+
+#login{
+  float: left;
+  margin-right: 10%;
+}
+
+.logreg {
+  display: inline-block;
+  width: 45%;
+  font-family: 'Roboto', sans-serif;
+}
+
+.logreg input, .logreg select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.logreg form{
+  margin-top: 10px;
+}
+
+.submit{
+  width: 100%;
+  background-color: #52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  color: white;
+}
+
+/*#Register input {
+  width: 100%;
+  padding: 12px 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}*/
+
+#Register .submit{
+  width: 100%;
+  background-color:#52aa5e;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  color: white;
+}
+
+.submit{
+  cursor: pointer;
+}
+
+.submit:hover {
+    background-color: #2bd9fe;
+}
+
+.submit:hover {
+  background-color: #2bd9fe;
 }
