@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href= "{{url_for("static", filename="style.css")}}">
+</head>
+<body>
+  <header>
+  {% if title == 'login' %}
+  <div id="logo">
+    <h1>WEB-STORE</h1>
+  </div>
+  {% else %}
+    <a href="index.html">
+    <div id="logo">
+      <h1>WEB-STORE</h1>
+    </div>
+  </a>
+    <a href="kart.html">
+      <div id="cart">
+         <img src="static/cart.png" alt="cart" width="30px" height="30px">
+         <h4>3</h4>
+      </div>
+    </a>
+    <div id="search">
+      <form action="" method="GET">
+      <input id="search_label" type="text" name="search" value="" placeholder="Search for product's name">
+      <input id="search_button" type="submit" name="" value="SEARCH">
+    </form>
+    </div>
+    <button id="logout" type="button" name="logout">LOG OUT</button>
+    {% endif %}
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <div id="footer_text">
+    <p>Email: webstore@mail.com</p>
+    <p>Copyright: Web-Store Inc 2020</p>
+  </div>
+  </footer>
+
