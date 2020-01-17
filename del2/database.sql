@@ -105,10 +105,10 @@ CREATE TABLE `orders` (
   `num_prducts` int(11) DEFAULT NULL,
   `order_date` date DEFAULT NULL,
   `culm_price` int(11) DEFAULT NULL,
-  `uID` int(11) DEFAULT NULL,
+  `username` char(20) DEFAULT NULL,
   PRIMARY KEY (`oID`),
-  KEY `uID` (`uID`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`) ON DELETE CASCADE
+  KEY `username` (`username`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -158,15 +158,15 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
-  `uID` int(11) NOT NULL AUTO_INCREMENT,
-  `username` char(20) DEFAULT NULL,
+  `username` char(20) NOT NULL,
+  `u_password` char(20) DEFAULT NULL,
   `city` char(20) DEFAULT NULL,
   `country` char(20) DEFAULT NULL,
   `address` char(50) DEFAULT NULL,
   `first_name` char(30) DEFAULT NULL,
   `last_name` char(30) DEFAULT NULL,
-  PRIMARY KEY (`uID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +175,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'pio93','Stavanger','Norway','Krykkjeveien 21','Piotr','Koloszyc');
+INSERT INTO `users` VALUES ('pio93','gratisek1','Stavanger','Norway','Krykkjeveien 21','Piotr','Koloszyc');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -188,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-16 15:56:31
+-- Dump completed on 2020-01-17 10:12:32
