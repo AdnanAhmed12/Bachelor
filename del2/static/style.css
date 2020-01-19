@@ -427,15 +427,6 @@ footer p{
   color: white;
 }
 
-/*#Register input {
-  width: 100%;
-  padding: 12px 20px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}*/
-
 #Register .submit{
   width: 100%;
   background-color:#52aa5e;
@@ -456,4 +447,17 @@ footer p{
 
 .submit:hover {
   background-color: #2bd9fe;
+}
+
+#msg{
+  background-color: lightblue;
+  padding: 10px;
+  border: 1px solid blue;
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  z-index: 3;
+  width: 75%;
+  border-radius: 15px;
 }
