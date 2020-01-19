@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <div id="buy_info">
+      <img id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="40%" height="360px">
+      <form id="info" action="" method="GET">
+        <div id ="name"><h3>{{product["name"]}}</h3></div>
+        <h3 id="price">Price: {{product["price"]}} NOK</h3>
+        <label for="quant">Quantity:</label>
+        <input id="number" type="number" name="quant" value="1" max="9" min="1">
+        <input id="buy" type="submit" name="buy" value="ADD TO CART">
+      </form>
+    </div>
+    <h2>Details</h2>
+    <div id="details">
+      <div id="left_column">
+        <h4>Supplier:</h4>
+        <h4>Release Date:</h4>
+        <h4>ISBN:</h4>
+      </div>
+      <div id="right_column">
+        <h4>{{product["supplier"]}}</h4>
+        <h4>{{product["year"]}}</h4>
+        <h4>{{product["isbn"]}}</h4>
+      </div>
+    </div>
+    <h2>Description</h2>
+    <div id="dummy">
+    <p>{{product["description"]}}</p>
+   </div>
+ </main>
+
+{% endblock %}

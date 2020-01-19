@@ -68,7 +68,6 @@ def register():
         return render_template('welcome.html', title='welcome')
     finally:
         cursor.close()
-        print('cursor closed')
 
     flash('Registration succesfull')
     return redirect(url_for('welcome'))
@@ -93,7 +92,65 @@ def login():
 
 @app.route('/main/<username>', methods=['GET','POST'])
 def main(username):
-    return render_template('main.html', title='main')
+
+    sql = 'SELECT * FROM Products WHERE p_status = "new"'
+
+    products = []
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql)
+        for pid, name, supplier, quantity, price, year, isbn, image, status, description in cursor: 
+            product = {'pid': str(pid),
+                       'name': str(name),
+                       'supplier': str(supplier),
+                       'quantity': str(quantity),
+                       'price': str(price), 
+                       'year': str(year), 
+                       'isbn': str(isbn), 
+                       'image': str(image),
+                       'status': str(status), 
+                       'description': str(description)}
+
+            products.append(product)
+
+    except mysql.connector.Error as err:
+        print(err) 
+    finally:
+        cursor.close()
+
+    return render_template('main.html', title='main', products=products, username=username)
+
+@app.route('/product/<username>/<pid>')
+def product(username, pid):
+    sql = 'SELECT * FROM Products WHERE pID = %s'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql, (pid, ))
+        row = cursor.fetchone()
+        product = {'pid': str(row[0]),
+                   'name': str(row[1]),
+                   'supplier': str(row[2]),
+                   'quantity': str(row[3]),
+                   'price': str(row[4]), 
+                   'year': str(row[5]),
+                   'isbn': str(row[6]),
+                   'image': str(row[7]),
+                   'status': str(row[8]),
+                   'description': str(row[9])}
+
+    except mysql.connector.Error as err:
+        print(err) 
+    finally:
+        cursor.close()
+
+    return render_template('product.html', product=product, username=username)
+
 
 def validate_input(fields):
 

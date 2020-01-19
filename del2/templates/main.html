@@ -1,49 +1,33 @@
+{% extends "base.html" %}
+{% block content%}
+
 <div id="index_main">
     <main>
        <h2>Newest Deals</h2>
         <div id="offers">
+         {% for product in products %}
            <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
+              <img class="left" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="50%" height=200px;>
               <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
+                <a href="{{url_for('product', username=username, pid=product["pid"])}}"><div class="name">{{product["name"]}}</div></a>
+                <h4 class="price">{{product["price"]}} NOK</h4>
               </div>
            </article>
-           <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-              <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
-              </div>
-           </article>
-           <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-              <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
-              </div>
-           </article>
-           <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-              <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
-              </div>
-           </article>
-           <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-              <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
-              </div>
-           </article>
-           <article class="offer">
-              <img class="left" src="static/placeholder.png" alt="placeholder" width="50%">
-              <div class="right">
-                <a href="product.html"><div class="name">Name of the product that is in this picture.</div></a>
-                <h4 class="price">1000 NOK</h4>
-              </div>
-           </article>
+           {% endfor %}
      </div>
      </main>
    </div>
+   <aside class="categories">
+      <h3>Categories</h3>
+      <form id="tags" action="index.html" method="post">
+        <label for="electronics">Electronics: </label><input type="checkbox" name="elctronics" value="">
+        <label for="home">Home: </label><input type="checkbox" name="home" value="">
+        <label for="car">Car: </label><input type="checkbox" name="car" value="">
+        <label for="fashion">Fashion: </label><input type="checkbox" name="fashion" value="">
+        <label for="sports">Sports: </label><input type="checkbox" name="sports" value="">
+        <label for="media">Media: </label><input type="checkbox" name="media" value="">
+        <input id="apply" type="submit" name="apply" value="Apply">
+      </form>
+    </aside>
+
+{% endblock %}
