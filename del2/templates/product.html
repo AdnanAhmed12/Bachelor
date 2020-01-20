@@ -4,11 +4,14 @@
 <main>
     <div id="buy_info">
       <img id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="40%" height="360px">
-      <form id="info" action="" method="GET">
+      <form id="info" action="{{url_for("add", pid=product["pid"])}}" method="POST">
         <div id ="name"><h3>{{product["name"]}}</h3></div>
         <h3 id="price">Price: {{product["price"]}} NOK</h3>
         <label for="quant">Quantity:</label>
         <input id="number" type="number" name="quant" value="1" max="9" min="1">
+        <input type="hidden" name="img" value="{{url_for("static", filename="images/{}".format(product["image"]))}}">
+        <input type="hidden" name="name" value="{{product["name"]}}">
+        <input type="hidden" name="price" value="{{product["price"]}}">
         <input id="buy" type="submit" name="buy" value="ADD TO CART">
       </form>
     </div>

@@ -12,15 +12,15 @@
     <h1>WEB-STORE</h1>
   </div>
   {% else %}
-    <a href="index.html">
+    <a href="{{url_for("main")}}">
     <div id="logo">
       <h1>WEB-STORE</h1>
     </div>
   </a>
-    <a href="kart.html">
+    <a href="{{url_for("cart")}}">
       <div id="cart">
          <img src="{{url_for("static", filename="images/cart.png")}}" alt="cart" width="30px" height="30px">
-         <h4>0</h4>
+         <h4>{{session["items"]}}</h4>
       </div>
     </a>
     <div id="search">
@@ -29,7 +29,9 @@
       <input id="search_button" type="submit" name="" value="SEARCH">
     </form>
     </div>
+    <a href="{{url_for("logout")}}">
     <button id="logout" type="button" name="logout">LOG OUT</button>
+    </a>
     {% endif %}
   </header>
 

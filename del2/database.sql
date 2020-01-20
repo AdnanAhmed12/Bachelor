@@ -1,5 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `bachelor`;
+
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bachelor
@@ -103,7 +104,7 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `oID` int(11) NOT NULL AUTO_INCREMENT,
   `num_prducts` int(11) DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
+  `order_date` char(20) DEFAULT NULL,
   `culm_price` int(11) DEFAULT NULL,
   `username` char(20) DEFAULT NULL,
   PRIMARY KEY (`oID`),
@@ -192,4 +193,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-19 20:42:39
+-- Dump completed on 2020-01-20 16:28:31
+
