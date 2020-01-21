@@ -354,7 +354,7 @@ footer p{
   padding-right: 10px;
 }
 
-#list button {
+#list input {
   display: block;
   margin: auto;
   margin-top: 40px;
@@ -367,7 +367,7 @@ footer p{
   border: none;
 }
 
-#list button:hover {
+#list input:hover {
   background-color:#2bd9fe;
 }
 

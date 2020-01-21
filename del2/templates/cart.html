@@ -15,7 +15,7 @@
       <article id="total">
         <h3>Total: {{sum}} NOK</h3>
       </article>
-      <form action="" method="GET">
+      <form action="{{url_for("buy")}}" method="POST">
         <input type="hidden" name="sum" value="{{sum}}">
         <input type="submit" name="buy" value="BUY">
       </form>
