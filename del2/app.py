@@ -214,8 +214,37 @@ def buy():
         print(err)
         return redirect(url_for('cart'))
 
-        
-    
+def get_product(pid):
+    """Loads a property from the database."""
+    # TODO: look up property from database
+    db=get_db()
+    cur= db.cursor()
+    products= []
+    sql="SELECT * FROM products WHERE pID= "+ str(pid)
+    cur.execute(sql)
+    p_name ,supplier,prod_quan,price,rel_year,isbn,image,p_status,p_description = cur.fetchone()
+    product_data ={
+        "p_name": p_name,
+        "supplier": supplier,
+        "prod_quan" : prod_quan,
+        "price" : price,
+        "rel_year": rel_year,
+        "isbn":isbn,
+        "image":image,
+        "p_status": p_status,
+        "p_description":p_description,
+    }
+    return product_data
+
+
+
+@app.route("/description/<int:pid>")
+def products(pid):
+    """Description page"""
+    return render_template("description.html", product=get_product(pid))
+
+
+
 
 @app.route('/logout')
 def logout():
