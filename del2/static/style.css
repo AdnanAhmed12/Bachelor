@@ -335,11 +335,6 @@ footer p{
   border-bottom: 2px solid #52aa5e;
 }
 
-.element a {
-  text-decoration: none;
-  color: black;
-}
-
 #total {
   background-color: #52aa5e;
   padding-top: 5px;
@@ -369,6 +364,17 @@ footer p{
 
 #list input:hover {
   background-color:#2bd9fe;
+}
+
+.cart_name{
+  width: 70%;
+  text-decoration: none;
+  color: black;
+}
+
+.cart_price{
+  width: 20%;
+  text-align: right;
 }
 
 .cart_name{

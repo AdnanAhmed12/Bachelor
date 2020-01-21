@@ -7,9 +7,9 @@
       {% for pid, product in products.items()%}
       <article class="element">
         <img src="{{product["img"]}}" alt="{{product["name"]}}" width="20%" height="170px">
-        <a href="{{url_for("product", pid=pid)}}"><h3>{{product["name"]}}</h3></a>
+        <a class="cart_name" href="{{url_for("product", pid=pid)}}"><h3>{{product["name"]}}</h3></a>
         <h3>&#215;{{product["quantity"]}}</h3>
-        <h3>{{product["price"]}} NOK</h3>
+        <h3 class="cart_price">{{product["price"]}} NOK</h3>
       </article>
       {% endfor %}
       <article id="total">

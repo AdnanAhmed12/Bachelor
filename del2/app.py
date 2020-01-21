@@ -56,7 +56,7 @@ def register():
                             request.form["address"], 
                             request.form["first_name"], 
                             request.form["last_name"]))
-        #db.commit()
+        db.commit()
     except mysql.connector.Error as err:
         db.rollback()
         if err.errno == 1062:
@@ -204,7 +204,7 @@ def buy():
         db.commit()
         session["cart"] = dict()
         session["items"] = 0
-        flash('Thank You for Buying. Your order id is: {}'.format(oid))
+        flash('Thank You for buying. Your order id is: {}'.format(oid))
     except mysql.connector.Error as err:
         db.rollback()
         print(err)
@@ -213,7 +213,63 @@ def buy():
         cursor.close()
 
     return redirect(url_for('main'))
-    
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(request.args["search"])
+
+    db = get_db()
+    cursor = db.cursor()
+
+    products = []
+
+    try:
+        cursor.execute(sql)
+        for pid, name, price, image in cursor:
+             product = {'pid': str(pid),
+                       'name': str(name),
+                       'price': str(price),  
+                       'image': str(image)}
+             products.append(product)
+
+    except mysql.connector.Error as err:
+        print(err)
+    finally:
+        cursor.close()
+
+    if len(products) == 0:
+        flash('No items found with phrase: {}'.format(request.args["search"]))
+
+    return render_template('main.html', title='search', products=products)
+
+@app.route('/categories', methods=['GET', 'POST'])
+def categories():
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    cats = request.args.to_dict()
+
+    sql1 = 'SELECT pID FROM belongs WHERE c_name = %s;'
+    sql2 = 'SELECT pID, p_name, price, image FROM Products WHERE pID = %s;'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        for cat in cats:
+            cursor.execute(sql1, (cat, ))
+            rows = cursor.fetchall()
+            print(cat)
+            print(rows)
+    except mysql.connector.Error as err:
+        print(err)
+    finally:
+        cursor.close()
+
+    return render_template('main.html', title='categories')
 
 @app.route('/logout')
 def logout():

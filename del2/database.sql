@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+CREATE DATABASE  IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `bachelor`;
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `belongs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `belongs` (
-  `cID` int(11) NOT NULL,
+  `c_name` char(30) NOT NULL,
   `pID` int(11) NOT NULL,
-  PRIMARY KEY (`cID`,`pID`),
+  PRIMARY KEY (`c_name`,`pID`),
   KEY `pID` (`pID`),
-  CONSTRAINT `belongs_ibfk_1` FOREIGN KEY (`cID`) REFERENCES `categories` (`cID`),
+  CONSTRAINT `belongs_ibfk_1` FOREIGN KEY (`c_name`) REFERENCES `categories` (`c_name`),
   CONSTRAINT `belongs_ibfk_2` FOREIGN KEY (`pID`) REFERENCES `products` (`pID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,6 +40,7 @@ CREATE TABLE `belongs` (
 
 LOCK TABLES `belongs` WRITE;
 /*!40000 ALTER TABLE `belongs` DISABLE KEYS */;
+INSERT INTO `belongs` VALUES ('Electronics',1),('Electronics',2),('Media',2),('Sport',3),('Fashion',4),('Sport',4),('Media',5),('Electronics',6),('Home',6);
 /*!40000 ALTER TABLE `belongs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,9 +52,8 @@ DROP TABLE IF EXISTS `categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `categories` (
-  `cID` int(11) NOT NULL AUTO_INCREMENT,
-  `c_name` char(30) DEFAULT NULL,
-  PRIMARY KEY (`cID`)
+  `c_name` char(30) NOT NULL,
+  PRIMARY KEY (`c_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -63,6 +63,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES ('Car'),('Electronics'),('Fashion'),('Home'),('Media'),('Sport');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,4 +193,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-21 11:01:53
+-- Dump completed on 2020-01-21 16:48:57
