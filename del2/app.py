@@ -212,12 +212,8 @@ def buy():
     finally:
         cursor.close()
 
-<<<<<<< HEAD
-
-=======
     return redirect(url_for('main'))
     
->>>>>>> cc84e5b738e8fdb93ec2bf710184220dd068ba97
 
 @app.route('/logout')
 def logout():
