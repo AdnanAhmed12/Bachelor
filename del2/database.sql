@@ -1,6 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+CREATE DATABASE IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `bachelor`;
-
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
 -- Host: localhost    Database: bachelor
@@ -30,7 +29,7 @@ CREATE TABLE `belongs` (
   `pID` int(11) NOT NULL,
   PRIMARY KEY (`cID`,`pID`),
   KEY `pID` (`pID`),
-  CONSTRAINT `belongs_ibfk_1` FOREIGN KEY (`cID`) REFERENCES `category` (`cID`),
+  CONSTRAINT `belongs_ibfk_1` FOREIGN KEY (`cID`) REFERENCES `categories` (`cID`),
   CONSTRAINT `belongs_ibfk_2` FOREIGN KEY (`pID`) REFERENCES `products` (`pID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -45,13 +44,13 @@ LOCK TABLES `belongs` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `category`
+-- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `category` (
+CREATE TABLE `categories` (
   `cID` int(11) NOT NULL AUTO_INCREMENT,
   `c_name` char(30) DEFAULT NULL,
   PRIMARY KEY (`cID`)
@@ -59,12 +58,12 @@ CREATE TABLE `category` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `category`
+-- Dumping data for table `categories`
 --
 
-LOCK TABLES `category` WRITE;
-/*!40000 ALTER TABLE `category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `category` ENABLE KEYS */;
+LOCK TABLES `categories` WRITE;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -180,7 +179,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('pio93','gratisek1','Stavanger','Norway','Krykkjeveien 21','Piotr','Koloszyc');
+INSERT INTO `users` VALUES ('test','test','test','test','test','test','test');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -193,5 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-20 16:28:31
-
+-- Dump completed on 2020-01-21 11:01:53

@@ -56,8 +56,9 @@ def register():
                             request.form["address"], 
                             request.form["first_name"], 
                             request.form["last_name"]))
-        db.commit()
+        #db.commit()
     except mysql.connector.Error as err:
+        db.rollback()
         if err.errno == 1062:
             print(err)
             flash('Username already exists')
@@ -187,64 +188,32 @@ def cart():
 
 @app.route('/buy', methods=['POST'])
 def buy():
-    sql1 = 'INSERT INTO Orders(num_products, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
-    sql2 = 'SELECT MAX(oID) FROM Orders'
-    sql3 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
-    sql4 = 'DELETE FROM Orders WHERE oID = %s'
+    sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
+    sql2 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
 
     db = get_db()
     cursor = db.cursor()
 
     try:
         cursor.execute(sql1, (session["items"], '2009-11-31', request.form["sum"], session["username"]))
+        oid = cursor.lastrowid
+
+        for pid in session["cart"]:
+            cursor.execute(sql2, (pid, oid, session["cart"][pid]["quantity"]))
+            
         db.commit()
+        session["cart"] = dict()
+        session["items"] = 0
+        flash('Thank You for Buying. Your order id is: {}'.format(oid))
     except mysql.connector.Error as err:
+        db.rollback()
         print(err)
         return redirect(url_for('cart'))
     finally:
         cursor.close()
 
-    try:
-        cursor.execute(sql2)
-        row = cursor.fetchone()
-        for pid in session["cart"]:
-            cursor.execute(sql3,(pid, row[0], session["cart"][pid]["quantity"]))
-        db.commit()
-    except mysql.connector.Error as err:
-        print(err)
-        return redirect(url_for('cart'))
-
-def get_product(pid):
-    """Loads a property from the database."""
-    # TODO: look up property from database
-    db=get_db()
-    cur= db.cursor()
-    products= []
-    sql="SELECT * FROM products WHERE pID= "+ str(pid)
-    cur.execute(sql)
-    p_name ,supplier,prod_quan,price,rel_year,isbn,image,p_status,p_description = cur.fetchone()
-    product_data ={
-        "p_name": p_name,
-        "supplier": supplier,
-        "prod_quan" : prod_quan,
-        "price" : price,
-        "rel_year": rel_year,
-        "isbn":isbn,
-        "image":image,
-        "p_status": p_status,
-        "p_description":p_description,
-    }
-    return product_data
-
-
-
-@app.route("/description/<int:pid>")
-def products(pid):
-    """Description page"""
-    return render_template("description.html", product=get_product(pid))
-
-
-
+    return redirect(url_for('main'))
+    
 
 @app.route('/logout')
 def logout():
