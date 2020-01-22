@@ -191,6 +191,11 @@ def cart():
 
 @app.route('/buy', methods=['POST'])
 def buy():
+
+    if len(session["cart"]) == 0:
+        flash('Your cart is empty')
+        return redirect(url_for('cart'))
+
     sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
     sql2 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
 
