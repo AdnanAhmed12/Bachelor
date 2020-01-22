@@ -7,6 +7,8 @@
        <h2>Newest Deals</h2>
       {% elif title == 'search'%}
        <h2>Search results</h2>
+       {% else %}
+       <h2>Categories: {% for cat in cats %}{{cat}}, {% endfor %}</h2>
       {% endif %}
         <div id="offers">
          {% for product in products %}
@@ -28,7 +30,7 @@
         <label for="home">Home: </label><input type="checkbox" name="Home" value="1">
         <label for="car">Car: </label><input type="checkbox" name="Car" value="1">
         <label for="fashion">Fashion: </label><input type="checkbox" name="Fashion" value="1">
-        <label for="sports">Sports: </label><input type="checkbox" name="Sports" value="1">
+        <label for="sports">Sport: </label><input type="checkbox" name="Sport" value="1">
         <label for="media">Media: </label><input type="checkbox" name="Media" value="1">
         <input id="apply" type="submit" value="Apply">
       </form>

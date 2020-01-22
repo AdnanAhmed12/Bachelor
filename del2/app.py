@@ -252,24 +252,45 @@ def categories():
 
     cats = request.args.to_dict()
 
-    sql1 = 'SELECT pID FROM belongs WHERE c_name = %s;'
-    sql2 = 'SELECT pID, p_name, price, image FROM Products WHERE pID = %s;'
+    if len(cats) == 0:
+        return redirect(url_for('main'))
+
+    sql_next = ''
+    i = 0
+    args = tuple()
+
+    for cat in cats:
+        if i == len(cats) - 1:
+            sql_next += 'c_name = %s'
+        else:
+            sql_next += 'c_name = %s OR '
+        i += 1
+        args += (cat ,)
+        
+    sql = 'SELECT P.pID, p_name, price, image ' \
+          'FROM Products P, Belongs B WHERE P.pID = B.pID AND ({0}) '\
+          'GROUP BY P.pID ' \
+          'HAVING COUNT(P.pID) > {1}'.format(sql_next, len(cats) - 1)
 
     db = get_db()
     cursor = db.cursor()
 
+    products = []
+
     try:
-        for cat in cats:
-            cursor.execute(sql1, (cat, ))
-            rows = cursor.fetchall()
-            print(cat)
-            print(rows)
+        cursor.execute(sql, args)
+        for pid, name, price, image in cursor:
+             product = {'pid': str(pid),
+                       'name': str(name),
+                       'price': str(price),  
+                       'image': str(image)}
+             products.append(product) 
     except mysql.connector.Error as err:
         print(err)
     finally:
         cursor.close()
 
-    return render_template('main.html', title='categories')
+    return render_template('main.html', products = products, cats=cats, title='categories')
 
 @app.route('/logout')
 def logout():
