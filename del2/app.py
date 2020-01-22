@@ -1,6 +1,7 @@
 from flask import Flask, render_template, g, url_for, request, redirect, flash, session
 from os import urandom
 import mysql.connector
+import datetime
 
 app = Flask(__name__)
 
@@ -24,18 +25,22 @@ def close_db(error):
 
 @app.route('/', methods=['GET','POST'])
 def welcome():
+
+    if 'username' in session:
+       return redirect(url_for('main'))
+
     return render_template('welcome.html', title='welcome')
 
 @app.route('/register', methods=['POST'])
 def register():
        
-    fields = {'username': request.form["user"],
-     'password': request.form["password"],
-     'conf_password': request.form["conf_password"],
-     'city': request.form["city"], 
-     'address': request.form["address"], 
-     'first_name': request.form["first_name"], 
-     'last_name': request.form["last_name"]}
+    fields = {'username': request.form["user"].strip(),
+     'password': request.form["password"].strip(),
+     'conf_password': request.form["conf_password"].strip(),
+     'city': request.form["city"].strip(), 
+     'address': request.form["address"].strip(), 
+     'first_name': request.form["first_name"].strip(), 
+     'last_name': request.form["last_name"].strip()}
     
     resp = validate_input(fields)
 
@@ -75,9 +80,6 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login(): 
-
-    if 'username' in session:
-        redirect(url_for('main'))
 
     sql = 'SELECT username, u_password FROM Users WHERE username = %s AND u_password = %s'
     db = get_db()
@@ -166,6 +168,7 @@ def product(pid):
 def add(pid):
     if pid in session["cart"]:
         session["cart"][pid]["quantity"] += int(request.form["quant"])
+        session["cart"][pid]["price"] += int(request.form["price"])*int(request.form["quant"])
     else:
         session["cart"].update({pid:{'quantity':int(request.form["quant"]),
                                  'name': request.form["name"],
@@ -191,11 +194,13 @@ def buy():
     sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
     sql2 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
 
+    date = datetime.datetime.today().strftime('%d-%m-%Y')
+
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql1, (session["items"], '2009-11-31', request.form["sum"], session["username"]))
+        cursor.execute(sql1, (session["items"], date, request.form["sum"], session["username"]))
         oid = cursor.lastrowid
 
         for pid in session["cart"]:
@@ -219,7 +224,13 @@ def search():
     if 'username' not in session: 
         return redirect(url_for('welcome'))
 
-    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(request.args["search"])
+    s_word = request.args["search"].strip()
+
+    if len(s_word) < 2: 
+        flash('Enter at least 2 characters')
+        return render_template('main.html', title='search')
+
+    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(s_word)
 
     db = get_db()
     cursor = db.cursor()
@@ -241,7 +252,7 @@ def search():
         cursor.close()
 
     if len(products) == 0:
-        flash('No items found with phrase: {}'.format(request.args["search"]))
+        flash('No items found with phrase: {}'.format(s_word))
 
     return render_template('main.html', title='search', products=products)
 
@@ -312,6 +323,7 @@ def validate_input(fields):
         return 'Password not confirmed!'
 
     return None
-        
+
+
 if __name__  == '__main__': 
     app.run()
