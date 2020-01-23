@@ -157,6 +157,9 @@ def product(pid):
                    'status': str(row[8]),
                    'description': str(row[9])}
 
+    except TypeError as err:
+        print(err)
+        return redirect(url_for('main'))
     except mysql.connector.Error as err:
         print(err) 
     finally:
@@ -188,6 +191,12 @@ def cart():
         sum += product["price"]
 
     return render_template('cart.html', title='cart', products=session["cart"], sum=sum)
+
+@app.route('/delete/<pid>', methods=['POST'])
+def delete(pid):
+    session["items"] -= session["cart"][pid]["quantity"]
+    del session["cart"][pid]
+    return redirect(url_for('cart'))
 
 @app.route('/buy', methods=['POST'])
 def buy():
@@ -308,7 +317,7 @@ def categories():
 
     return render_template('main.html', products = products, cats=cats, title='categories')
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
     session.pop('cart', None)
