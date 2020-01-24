@@ -35,15 +35,16 @@
     {% endif %}
   </header>
 
-  {% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
    {% if messages %}
-      {% for message in messages %}
-      <div id="msg">
+      {% for category, message in messages %}
+      <div class="{{category}}">
         <p>{{message}}</p>
       </div>
       {% endfor %}
    {% endif %}
 {% endwith %}
+
 
   {% block content %}{% endblock %}
 

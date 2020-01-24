@@ -131,7 +131,7 @@ p {
 }
 
 main {
-  padding-top: 200px;
+  padding-top: 150px;
   margin: auto;
   width: 80%;
   max-width: 1200px;
@@ -198,7 +198,7 @@ main h2 {
 aside {
   position: fixed;
   float: right;
-  top: 185px;
+  top: 165px;
   left: 85%;
   width: 12%;
   background-color: #52aa8a;
@@ -206,6 +206,7 @@ aside {
   padding-bottom: 10px;
   font-family: 'Roboto', sans-serif;
   min-width: 130px;
+  margin-top: 20px;
 }
 
 aside h3{
@@ -389,12 +390,12 @@ footer p{
 
 .delete {
   background-color: #52aa5e;
-  padding: 2px;
+  padding: 3px;
   position: absolute;
   left: 97%;
   top: 10%;
   width: 20px;
-  height: 22px;
+  height: 20px;
 }
 
 .delete:hover{
@@ -441,26 +442,8 @@ footer p{
 }
 
 .submit{
-  width: 100%;
   background-color: #52aa5e;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
   color: white;
-}
-
-#Register .submit{
-  width: 100%;
-  background-color:#52aa5e;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  color: white;
-}
-
-.submit{
   cursor: pointer;
 }
 
@@ -468,19 +451,23 @@ footer p{
     background-color: #2bd9fe;
 }
 
-.submit:hover {
-  background-color: #2bd9fe;
+.info, .error{
+  padding: 10px;
+  position: relative;
+  top: 95px;
+  margin: auto;
+  margin-top: 5px;
+  z-index: 3;
+  width: 65%;
+  border-radius: 15px;
 }
 
-#msg{
+.info{
   background-color: lightblue;
-  padding: 10px;
   border: 1px solid blue;
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  z-index: 3;
-  width: 75%;
-  border-radius: 15px;
+}
+
+.error{
+  background-color: salmon;
+  border: 1px solid red;
 }

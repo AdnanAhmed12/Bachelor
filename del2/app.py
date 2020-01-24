@@ -45,7 +45,7 @@ def register():
     resp = validate_input(fields)
 
     if resp is not None:
-        flash(resp)
+        flash(resp, 'error')
         return render_template('welcome.html', title='welcome')
 
     sql = 'INSERT INTO Users(username, u_password, city, country, address, first_name, last_name)'\
@@ -66,16 +66,16 @@ def register():
         db.rollback()
         if err.errno == 1062:
             print(err)
-            flash('Username already exists')
+            flash('Username already exists', 'error')
         else:
             print(err)
-            flash('Registration failed')
+            flash('Database error', 'error')
 
         return render_template('welcome.html', title='welcome')
     finally:
         cursor.close()
 
-    flash('Registration succesfull')
+    flash('Registration succesfull', 'info')
     return redirect(url_for('welcome'))
 
 @app.route('/login', methods=['POST'])
@@ -90,6 +90,7 @@ def login():
         row = cursor.fetchone()
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -99,7 +100,7 @@ def login():
         session['cart'] = dict()
         return redirect(url_for('main'))
     else:
-        flash('Wrong username or password')
+        flash('Wrong username or password', 'error')
         return render_template('welcome.html', title='welcome')
 
 @app.route('/main', methods=['GET','POST'])
@@ -127,6 +128,7 @@ def main():
 
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -162,6 +164,7 @@ def product(pid):
         return redirect(url_for('main'))
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -202,7 +205,7 @@ def delete(pid):
 def buy():
 
     if len(session["cart"]) == 0:
-        flash('Your cart is empty')
+        flash('Your cart is empty', 'info')
         return redirect(url_for('cart'))
 
     sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
@@ -223,10 +226,11 @@ def buy():
         db.commit()
         session["cart"] = dict()
         session["items"] = 0
-        flash('Thank You for buying. Your order id is: {}'.format(oid))
+        flash('Thank You for buying. Your order id is: {}'.format(oid), 'info')
     except mysql.connector.Error as err:
         db.rollback()
         print(err)
+        flash('Database error', 'error')
         return redirect(url_for('cart'))
     finally:
         cursor.close()
@@ -241,7 +245,7 @@ def search():
     s_word = request.args["search"].strip()
 
     if len(s_word) < 2: 
-        flash('Enter at least 2 characters')
+        flash('Enter at least 2 characters', 'info')
         return render_template('main.html', title='search')
 
     sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(s_word)
@@ -262,11 +266,12 @@ def search():
 
     except mysql.connector.Error as err:
         print(err)
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
     if len(products) == 0:
-        flash('No items found with phrase: {}'.format(s_word))
+        flash('No items found with phrase: {}'.format(s_word), 'info')
 
     return render_template('main.html', title='search', products=products)
 
@@ -312,6 +317,7 @@ def categories():
              products.append(product) 
     except mysql.connector.Error as err:
         print(err)
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
