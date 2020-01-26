@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href= "{{url_for("static", filename="style.css")}}">
+</head>
+<body>
+  <header>
+  {% if title == 'welcome' %}
+  <div id="logo">
+    <h1>WEB-STORE</h1>
+  </div>
+  {% else %}
+    {% if role == 'admin' %}
+    <nav>
+      <ul id="nav_list">
+        <a href="{{url_for('products')}}"><li>Products</li></a>
+        <a href="{{url_for('orders')}}"><li>Orders</li></a>
+        <a href="{{url_for('users')}}"><li>Users</li></a>
+      </ul>
+    </nav>
+    {% endif %}
+    <a href="{{url_for("main")}}">
+    <div id="logo">
+      <h1>WEB-STORE</h1>
+    </div>
+  </a>
+    <a href="{{url_for("cart")}}">
+      <div id="cart">
+         <img src="{{url_for("static", filename="images/cart.png")}}" alt="cart" width="30px" height="30px">
+         <h4>{{session["items"]}}</h4>
+      </div>
+    </a>
+    <div id="search">
+      <form action="{{url_for("search")}}" method="GET">
+      <input id="search_label" type="text" name="search" value="" placeholder="Search for product's name">
+      <input id="search_button" type="submit" name="" value="SEARCH">
+    </form>
+    </div>
+    <a href="{{url_for("logout")}}">
+    <button id="logout" type="button" name="logout">LOG OUT</button>
+    </a>
+    {% endif %}
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+   {% if messages %}
+      {% for category, message in messages %}
+      <div class="{{category}}">
+        <p>{{message}}</p>
+      </div>
+      {% endfor %}
+   {% endif %}
+{% endwith %}
+
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <div id="footer_text">
+    <p>Email: webstore@mail.com</p>
+    <p>Copyright: Web-Store Inc 2020</p>
+  </div>
+  </footer>
+

@@ -1,0 +1,603 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+/*Colors:
+  dark green : #388659
+  light green: #52aa5e
+  green-ish: #52aa8a
+  blue: #3aaed8
+  blue-ish: #2bd9fe
+*/
+
+html, body{
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Tahoma", Geneva, sans-serif
+}
+
+td, li{
+  font-family: 'Ubuntu', sans-serif;
+}
+
+header {
+  position: absolute;
+  width: 100%;
+  background-color: #52aa5e;
+  top: 0px;
+  height: 50px;
+  z-index: 4;
+  min-width: 1100px;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 110%;
+}
+
+#cart {
+  position: absolute;
+  top: 50%;
+  left: 82%;
+  transform: translate(0%,-50%);
+  height: 30px;
+  border: 2px solid white;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cart:hover {
+  background-color: #2bd9fe
+}
+
+#cart *{
+  display: inline-block;
+}
+
+#cart img{
+  float: left;
+}
+
+#cart h4{
+  color: white;
+  margin: 0;
+  padding: 0;
+  line-height: 30px;
+  margin-left: 10px;
+}
+
+#logo {
+  position: absolute;
+  height: 70px;
+  background-color: #3aaed8;
+  left: 5%;
+  padding-left: 5px;
+  padding-right: 5px;
+  z-index: 5;
+}
+
+#logo h1 {
+  color: white;
+  margin: 0;
+  padding: 0;
+  line-height: 70px;
+  font-family: "Arial Black", Gadget, sans-serif
+}
+
+#search {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+#search_button {
+  background-color: #52aa5e;
+  border: 2px solid white;
+  padding: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+#search_label {
+  padding: 5px;
+  width: 250px;
+}
+
+#search_button:hover {
+  background-color: #2bd9fe
+}
+
+#logout {
+  position: absolute;
+  top: 50%;
+  left: 90%;
+  transform: translate(0%,-50%);
+  padding: 5px;
+  background-color: #52aa5e;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#logout:hover{
+  background-color: #2bd9fe
+}
+
+main {
+  padding-top: 150px;
+  margin: auto;
+  width: 80%;
+  max-width: 1200px;
+  min-width: 800px;
+  min-height: calc(100vh - 100px);
+}
+
+#index_main main{
+  margin-left: 3%;
+}
+
+main h2 {
+  background-color: #52aa5e;
+  margin: 0px;
+  padding: 10px;
+  color: white;
+}
+
+#offers {
+  width: 90%;
+  padding: 0px;
+  margin: auto;
+}
+
+.offer {
+  display: inline-block;
+  overflow: auto;
+  margin: 1%;
+  width: 47%;
+}
+
+.left {
+  padding: 1%;
+  float: left;
+}
+
+.right {
+  padding: 0.5%;
+  text-align: center;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.name {
+  margin: 0px;
+  padding: 0px;
+  padding-top: 1%;
+  height: 80px;
+  overflow: auto;
+}
+
+.price {
+  padding-top: 3%;
+}
+
+#offers a {
+  text-decoration: none;
+  color: black;
+}
+
+#offers a:hover{
+  text-decoration: underline;
+}
+
+aside {
+  position: fixed;
+  float: right;
+  top: 165px;
+  left: 85%;
+  width: 12%;
+  background-color: #52aa8a;
+  color: white;
+  padding-bottom: 10px;
+  font-family: 'Roboto', sans-serif;
+  min-width: 130px;
+  margin-top: 20px;
+}
+
+aside h3{
+  text-align: center;
+}
+
+#tags{
+  margin-left: 10%;
+}
+
+#tags input[type=checkbox], #tags label {
+  float: left;
+}
+
+#tags label {
+  width: 70%;
+  height: 30px;
+  text-align: left;
+}
+
+#apply {
+  position: relative;
+  left: 40%;
+  transform: translate(-40%, 0%);
+  background-color: #52aa8a;
+  color: white;
+  border: 1px solid white;
+  cursor: pointer;
+  font-weight: bold;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+#apply:hover{
+  background-color: #2bd9fe;
+}
+
+footer{
+  position: relative;
+  width: 100%;
+  height: 100px;
+  text-align: center;
+  margin-top: 40px;
+  border-top: 5px solid black;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #388659;
+}
+
+footer p{
+  color: white;
+  margin: 0;
+}
+
+#footer_text {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%,-50%);
+}
+
+#buy_info {
+  border: 2px solid #52aa5e;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+#image {
+  float: left;
+}
+
+#info {
+  text-align: center;
+  height: 360px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#price {
+  margin-top: 5%;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+#number {
+  margin-top: 5%;
+  width: 35px;
+  margin-left: 1%;
+}
+
+#add {
+  display: block;
+  margin: auto;
+  margin-top: 5%;
+  padding: 7px 20%;
+  background-color: #52aa5e;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#add:hover{
+  background-color: #2bd9fe
+}
+
+#name {
+  height: 70px;
+  overflow: auto;
+}
+
+#dummy {
+  width: 90%;
+  padding-left: 5%;
+  padding-bottom: 60px;
+}
+
+#list {
+  width: 90%;
+  margin: auto;
+}
+
+.element {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 200px;
+  border-bottom: 2px solid #52aa5e;
+}
+
+#total {
+  background-color: #52aa5e;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: white;
+}
+
+.element h3, #total h3{
+  padding-right: 10px;
+}
+
+#buy {
+  display: block;
+  margin: auto;
+  margin-top: 40px;
+  padding: 10px;
+  width: 50%;
+  background-color: #52aa5e;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+#buy:hover {
+  background-color:#2bd9fe;
+}
+
+.cart_name{
+  width: 70%;
+  text-align: center;
+}
+
+.cart_name a{
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.cart_price{
+  width: 20%;
+  text-align: right;
+}
+
+.cart_name a:hover{
+  text-decoration: underline;
+}
+
+.delete {
+  background-color: #52aa5e;
+  padding: 3px;
+  position: absolute;
+  left: 97%;
+  top: 10%;
+  width: 20px;
+  height: 20px;
+}
+
+.delete:hover{
+  background-color: #2bd9fe;
+  cursor: pointer;
+}
+
+#details {
+  display: table;
+  width: 50%;
+  margin: auto;
+}
+
+#left_column, #right_column {
+  display: table-cell;
+}
+
+#right_column{
+  text-align: right;
+}
+
+#login{
+  float: left;
+  margin-right: 10%;
+}
+
+.logreg {
+  display: inline-block;
+  width: 45%;
+  font-family: 'Roboto', sans-serif;
+}
+
+.logreg input, .logreg select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.logreg form{
+  margin-top: 10px;
+}
+
+.submit{
+  background-color: #52aa5e;
+  color: white;
+  cursor: pointer;
+}
+
+.submit:hover {
+    background-color: #2bd9fe;
+}
+
+.info, .error{
+  padding: 10px;
+  position: relative;
+  top: 95px;
+  margin: auto;
+  margin-top: 5px;
+  z-index: 3;
+  width: 65%;
+  border-radius: 15px;
+}
+
+.info{
+  background-color: lightblue;
+  border: 1px solid blue;
+}
+
+.error{
+  background-color: salmon;
+  border: 1px solid red;
+}
+
+nav{
+  margin: 0;
+  position: absolute;
+  left: 62%;
+  top: 0px;
+  height: 50px;
+  border-right: 1px solid white;
+}
+
+#nav_list{
+  list-style-type: none;
+  margin: 0;
+}
+
+#nav_list li{
+  display: inline-block;
+  text-align: center;
+  border-left: 1px solid white;
+  height: 50px;
+  line-height: 50px;
+  margin: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+#admin_list{
+  width: 60%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+.admin_node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  width: 100%;
+  margin-top: 10px;
+  height: 60px;
+}
+
+.admin_node p{
+  display: inline-block;
+  padding-left: 5px;
+}
+
+.admin_details{
+  background-color: #52aa5e;
+  color: white;
+  border: none;
+  height: 60px;
+}
+
+.admin_details:hover{
+  cursor: pointer;
+  background-color: #2bd9fe
+}
+
+#details{
+  width: 50%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+#details table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#details td {
+  padding: 10px;
+}
+
+#buttons {
+  width: 80%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.details_button{
+  background-color: #52aa5e;
+  color: white;
+  border: none;
+  width: 40%;
+  font-weight: bold;
+  border: none;
+  text-align: center;
+  height: 40px;
+  padding: 0;
+}
+
+.d_right{
+  float: right;
+}
+
+.admin_button{
+  display: block;
+  background-color: #52aa5e;
+  color: white;
+  margin: auto;
+  height: 40px;
+  width: 50%;
+  margin-top: 20px;
+  font-weight: bold;
+  border: none;
+}
+
+#role_change{
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+#role_change_select{
+  margin-left: 20px;
+}
+
+#role_change_button{
+  float: right;
+}
+
+#alter_from{
+  margin: auto;
+}

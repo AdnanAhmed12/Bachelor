@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <h2>Cart</h2>
+    <div id="list">
+      {% for pid, product in products.items() %}
+      <article class="element">
+        <img src="{{product["img"]}}" alt="{{product["name"]}}" width="215px" height="170px">
+        <h3 class="cart_name"><a href="{{url_for("product", pid=pid)}}"></a>{{product["name"]}}</a></h3>
+        <h3>&#215;{{product["quantity"]}}</h3>
+        <h3 class="cart_price">{{product["price"]}} NOK</h3>
+        <form class="delete" action="{{url_for("delete", pid=pid)}}" method="POST">
+          <input type="image" width="20px" src="{{url_for("static", filename="images/delete.png")}}" name="delete" value="">
+        </form>
+      </article>
+      {% endfor %}
+      <article id="total">
+        <h3>Total: {{sum}} NOK</h3>
+      </article>
+      <form action="{{url_for("buy")}}" method="POST">
+        <input type="hidden" name="sum" value="{{sum}}">
+        <input id="buy" type="submit" name="buy" value="BUY">
+      </form>
+    </div>
+ </main>
+
+ {% endblock %}

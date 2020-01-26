@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <h2>User: {{username}}</h2>
+    <div id="details">
+      <form id="role_change" action="index.html" method="post">
+        <fieldset>
+          <legend>Change role</legend>
+          <label for="role">Role: </label>
+          <select id ="role_change_select" name="role">
+            <option value="1">User</option>
+            <option value="2">Admin</option>
+            <input id="role_change_button" type="submit" name="change" value="Change">
+          </select>
+        </fieldset>
+      </form>
+      <table border="1">
+        <tr>
+          <td>Username</td>
+          <td>{{user["username"]}}</td>
+        </tr>
+        <tr>
+          <td>First name</td>
+          <td>{{user["first_name"]}}</td>
+        </tr>
+        <tr>
+          <td>Last name</td>
+          <td>{{user["last_name"]}}</td>
+        </tr>
+        <tr>
+          <td>Adress</td>
+          <td>{{user["address"]}}</td>
+        </tr>
+        <tr>
+          <td>City</td>
+          <td>{{user["city"]}}</td>
+        </tr>
+        <tr>
+          <td>Country</td>
+          <td>{{user["country"]}}</td>
+        </tr>
+        <tr>
+          <td>Role</td>
+          <td>{{user["role"]}}</td>
+        </tr>
+      </table>
+      <button class="admin_button" type="button" name="button">DELETE</button>
+    </div>
+   </main>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <div id="login" class="logreg">
+    <h2>Log In</h2>
+    <form action="{{url_for("login")}}" method="POST">
+        <label for="user">Username: </label>
+        <input type="text" name="log_user" value="{{request.form["log_user"]}}" placeholder="Username">
+        <label for="password" class="password">Password: </label>
+        <input type="password" name="log_password" value="{{request.form["log_password"]}}" placeholder="Password">
+      <input type="submit" name="log in" value="Log in" class="submit">
+    </form>
+</div>
+  <div class="logreg">
+    <h2>Register</h2>
+    <form action="{{url_for("register")}}" method="POST">
+        <label for="first_name">First name:</label>
+        <input type="text" name="first_name" value="{{request.form["first_name"]}}" placeholder="First name">
+        <label for="last_name">Last name:</label>
+        <input type="text" name="last_name" value="{{request.form["last_name"]}}"placeholder="Last name">
+        <label for="city">City:</label>
+        <input type="text" name="city" value="{{request.form["city"]}}" placeholder="City">
+        <label for="address">Address:</label>
+        <input type="text" name="address" value="{{request.form["address"]}}"  placeholder="Address">
+        <label for="country">Country:</label>
+        <select name="country">
+          <option value="Norway"{% if request.form["country"] == "Norway" %} selected {% endif %}>Norway</option>
+          <option value="Sweden"{% if request.form["country"] == "Sweden" %} selected {% endif %}>Sweden</option>
+          <option value="Denmark"{% if request.form["country"] == "Denmark" %} selected {% endif %}>Denmark</option>
+          <option value="Finland"{% if request.form["country"] == "Finland" %} selected {% endif %}>Finland</option>
+          <option value="Iceland"{% if request.form["country"] == "Iceland" %} selected {% endif %}>Iceland</option>
+        </select>
+        <label for="user">Username:</label>
+        <input type="text" name="user" value="{{request.form["user"]}}"  placeholder="Username">
+        <label for="password">Password:</label>
+        <input type="password" name="password" value="{{request.form["password"]}}"  placeholder="Password">
+        <label for="conf_password">Confirm password:</label>
+        <input type="password" name="conf_password" value="{{request.form["conf_password"]}}" class="input" placeholder="Confirm">
+        <input type="submit" name="Register" value="Register" class="submit">
+    </form>
+</div>
+  </main>
+
+{% endblock %}
