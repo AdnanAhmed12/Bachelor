@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <h2>Order: {{order["oID"]}}</h2>
+    <div id="details">
+      <table border="1">
+        <tr>
+          <td>Order ID</td>
+          <td>{{order["oID"]}}</td>
+        </tr>
+        <tr>
+          <td>Number of Products</td>
+          <td>{{order["num_products"]}}</td>
+        </tr>
+        <tr>
+          <td>Date</td>
+          <td>{{order["date"]}}</td>
+        </tr>
+        <tr>
+          <td>Total price</td>
+          <td>{{order["culm_price"]}}</td>
+        </tr>
+        <tr>
+          <td>Username</td>
+          <td>{{order["username"]}}</td>
+        </tr>
+        <tr>
+          <td>Products</td>
+          <td>
+            <ul>
+            {% for product in products %}
+              <li>{{product["name"]}} &#215;{{product["quantity"]}}</li>
+            {% endfor %}  
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+   </main>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+  <h2>Product: 2</h2>
+  <div id="details">
+  <form id="alter_from" action="{{url_for('add_product')}}" method="post" enctype = "multipart/form-data">
+    <table border="0">
+      <tr>
+        <td>Name</td>
+        <td><input type="text" name="name" value=""></td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td><input type="text" name="supplier" value=""></td>
+      </tr>
+      <tr>
+        <td>Quantity</td>
+        <td><input type="text" name="quantity" value=""></td>
+      </tr>
+      <tr>
+        <td>Price</td>
+        <td><input type="text" name="price" value=""></td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td><input type="text" name="year" value=""></td>
+      </tr>
+      <tr>
+        <td>ISBN</td>
+        <td><input type="text" name="isbn" value=""></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><input type="text" name="status" value=""></td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td> <textarea rows="4" cols="50" name="description"></textarea></td>
+      </tr>
+      <tr>
+        <td>Image</td>
+        <td><input type="file" name="image" value=""></td>
+      </tr>
+      <tr>
+        <td>Categories</td>
+        <td>
+          <input type="checkbox" name="check" value="Electronics">Electronics<br>
+          <input type="checkbox" name="check" value="Home">Home<br>
+          <input type="checkbox" name="check" value="Car">Car<br>
+          <input type="checkbox" name="check" value="Fashion">Fashion<br>
+          <input type="checkbox" name="check" value="Sport">Sport<br>
+          <input type="checkbox" name="check" value="Media">Media</br>
+        </td>
+      </tr>
+    </table>
+    <input class="admin_button" type="submit" name="" value="ADD">
+   </form>
+  </div>
+ </main>
+
+{% endblock %}

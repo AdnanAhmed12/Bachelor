@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <h2>Product: {{product["pID"]}}</h2>
+    <div id="details">
+      <div id ="buttons">
+      <form action="index.html" method="post">
+        <input class="details_button" type="button" name="button" value="Change ">
+        <input class="details_button d_right" type="input" name="delete_product" value="Delete">
+      </form>
+    </div>
+      <table border="1">
+        <tr>
+          <td>Product ID</td>
+          <td>{{product["pID"]}}</td>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td>{{product["name"]}}</td>
+        </tr>
+        <tr>
+          <td>Supplier</td>
+          <td>{{product["supplier"]}}</td>
+        </tr>
+        <tr>
+          <td>Quantity</td>
+          <td>{{product["quantity"]}}</td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td>{{product["price"]}} NOK</td>
+        </tr>
+        <tr>
+          <td>Year</td>
+          <td>{{product["year"]}}</td>
+        </tr>
+        <tr>
+          <td>ISBN</td>
+          <td>{{product["isbn"]}}</td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td>{{product["status"]}}</td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>{{product["description"]}}</td>
+        </tr>
+        <tr>
+          <td>Image</td>
+          <td><img src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="placeholder" width="200px" height="200px"></td>
+        </tr>
+        <tr>
+          <td>Categories</td>
+          <td>
+            <ul>
+              {% for category in categories %}
+              <li>{{category}}</li>
+              {% endfor %}
+           </ul>
+        </td>
+        </tr>
+      </table>
+    </div>
+   </main>
+
+{% endblock %}

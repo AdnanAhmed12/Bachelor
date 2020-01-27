@@ -2,6 +2,7 @@ from flask import Flask, render_template, g, url_for, request, redirect, flash, 
 from os import urandom
 import mysql.connector
 import datetime
+import os
 
 app = Flask(__name__)
 
@@ -210,7 +211,7 @@ def buy():
         flash('Your cart is empty', 'info')
         return redirect(url_for('cart'))
 
-    sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
+    sql1 = 'INSERT INTO Orders(num_products, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
     sql2 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
 
     date = datetime.datetime.today().strftime('%d-%m-%Y')
@@ -396,7 +397,39 @@ def orders():
 
     return render_template('list.html', orders=orders, role=session["role"], title='orders')
 
-@app.route('/products')
+@app.route('/order_details/<oID>', methods=['GET', 'POST'])
+def order_details(oID):
+    
+    sql = 'SELECT O.oID, O.num_products, O.order_date, O.culm_price, O.username, I.quan, P.p_name ' \
+          'FROM Orders O, includes I, Products P ' \
+          'WHERE O.oID = I.oID AND P.pID = I.pID AND O.oID = %s;'
+    products = []
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+       cursor.execute(sql, (oID, ))
+       rows = cursor.fetchall()
+       
+       order = {'oID': rows[0][0],
+                'num_products':rows[0][1],
+                'date': rows[0][2],
+                'culm_price': rows[0][3],
+                'username': rows[0][4]}
+
+       for row in rows:
+            products.append({'quantity': row[5], 'name': row[6]})
+
+    except mysql.connector.Error as err:
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+
+    return render_template('order_details.html', order=order, products=products, role=session["role"], title='Order: {}'.format(rows[0][0]))
+
+@app.route('/products', methods=['GET', 'POST'])
 def products():
 
     sql = 'SELECT pID, p_name FROM Products'
@@ -419,7 +452,88 @@ def products():
 
     return render_template('list.html', products=products, role=session["role"], title='products')
 
+@app.route('/product_details/<pID>', methods=['GET', 'POST'])
+def product_details(pID):
 
+    sql = 'SELECT * FROM Products P, belongs B WHERE P.pID = B.pID AND P.pID = %s'
+    categories = []
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+       cursor.execute(sql, (pID, ))
+       rows = cursor.fetchall()
+       
+       product = {'pID': rows[0][0],
+                  'name':rows[0][1],
+                  'supplier': rows[0][2],
+                  'quantity': rows[0][3],
+                  'price': rows[0][4],
+                  'year': rows[0][5],
+                  'isbn': rows[0][6], 
+                  'image': rows[0][7],
+                  'status': rows[0][8],
+                  'description': rows[0][9]}
+
+       for row in rows:
+            categories.append(row[10])
+
+    except mysql.connector.Error as err:
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+
+    return render_template('product_details.html', product=product, categories=categories, role=session["role"], title=rows[0][1])
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+
+    if request.method == 'POST':
+        
+        sql1 = 'INSERT INTO Products(p_name, supplier, prod_quan, price, rel_year, isbn, image, p_status, p_description)' \
+              'VALUE(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+        sql2 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
+
+        db = get_db()
+        cursor = db.cursor()
+
+        f = request.files["image"]
+
+        try:
+            cursor.execute(sql1, (request.form["name"],
+                                 request.form["supplier"],
+                                 int(request.form["quantity"]),
+                                 request.form["price"],
+                                 request.form["year"],
+                                 request.form["isbn"],
+                                 f.filename,
+                                 request.form["status"],
+                                 request.form["description"]))
+
+            path = os.path.abspath(os.path.join('static/images', f.filename))
+            f.save(path)
+
+            pid = cursor.lastrowid
+            cats = request.form.getlist('check')
+
+            for cat in cats: 
+                cursor.execute(sql2, (cat, pid))
+
+            db.commit()
+        except IOError as err:
+            db.rollback()
+            print(err)
+            flash('File error', 'error')
+        except mysql.connector.Error as err:
+            db.rollback()
+            print(err)
+            flash('Database error', 'error')
+        finally:
+            cursor.close()
+
+    return render_template('new_product.html', role=session["role"])
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
