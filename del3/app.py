@@ -3,6 +3,7 @@ from os import urandom
 import mysql.connector
 import datetime
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -23,6 +24,8 @@ def close_db(error):
     db = getattr(g, '_database', None)
     if db is not None: 
         db.close()
+
+#Part User
 
 @app.route('/', methods=['GET','POST'])
 def welcome():
@@ -171,7 +174,7 @@ def product(pid):
     finally:
         cursor.close()
 
-    return render_template('product.html', title=str(row[1]), product=product)
+    return render_template('product.html', title=str(row[1]), product=product, role=session["role"])
 
 @app.route('/add/<pid>', methods=['POST'])
 def add(pid):
@@ -196,7 +199,7 @@ def cart():
     for product in session["cart"].values():
         sum += product["price"]
 
-    return render_template('cart.html', title='cart', products=session["cart"], sum=sum)
+    return render_template('cart.html', title='cart', products=session["cart"], sum=sum, role=session["role"])
 
 @app.route('/delete/<pid>', methods=['POST'])
 def delete(pid):
@@ -251,7 +254,7 @@ def search():
         flash('Enter at least 2 characters', 'info')
         return render_template('main.html', title='search')
 
-    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(s_word)
+    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%" OR rel_year LIKE "%{0}%";'.format(s_word)
 
     db = get_db()
     cursor = db.cursor()
@@ -276,7 +279,7 @@ def search():
     if len(products) == 0:
         flash('No items found with phrase: {}'.format(s_word), 'info')
 
-    return render_template('main.html', title='search', products=products)
+    return render_template('main.html', title='search', products=products, role=session["role"])
 
 @app.route('/categories', methods=['GET', 'POST'])
 def categories():
@@ -324,10 +327,18 @@ def categories():
     finally:
         cursor.close()
 
-    return render_template('main.html', products = products, cats=cats, title='categories')
+    return render_template('main.html', products = products, cats=cats, title='categories', role=session["role"])
+
+#Part Admin
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
+
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
 
     sql = 'SELECT username, first_name, last_name FROM Users'
     users = []
@@ -352,6 +363,12 @@ def users():
 @app.route('/user_details/<username>', methods=['GET', 'POST'])
 def user_details(username):
     
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+    
     sql = 'SELECT * FROM Users WHERE username = %s'
 
     db = get_db()
@@ -375,8 +392,55 @@ def user_details(username):
 
     return render_template('user_details.html', user=user, title=row[0], role=session["role"])
 
+@app.route('/change_role/<username>', methods=['POST'])
+def change_role(username):
+
+    sql = 'UPDATE Users SET u_role = %s WHERE username = %s'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql, (request.form["role"], username))
+        db.commit()
+    except mysql.connector.Error as err:
+        db.rollback()
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+
+    return redirect(url_for('user_details', username=username))
+
+@app.route('/delete_user/<username>', methods=['POST'])
+def delete_user(username):
+
+    sql = 'DELETE FROM Users WHERE username = %s'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql, (username, ))
+        db.commit()
+    except mysql.connector.Error as err:
+        db.rollback()
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+
+    return redirect(url_for('users'))
+
+
 @app.route('/orders', methods=['GET', 'POST'])
 def orders():
+
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
 
     sql = 'SELECT oID, username FROM Orders'
     orders = []
@@ -400,6 +464,12 @@ def orders():
 @app.route('/order_details/<oID>', methods=['GET', 'POST'])
 def order_details(oID):
     
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     sql = 'SELECT O.oID, O.num_products, O.order_date, O.culm_price, O.username, I.quan, P.p_name ' \
           'FROM Orders O, includes I, Products P ' \
           'WHERE O.oID = I.oID AND P.pID = I.pID AND O.oID = %s;'
@@ -432,6 +502,12 @@ def order_details(oID):
 @app.route('/products', methods=['GET', 'POST'])
 def products():
 
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     sql = 'SELECT pID, p_name FROM Products'
 
     products = []
@@ -443,7 +519,7 @@ def products():
         cursor.execute(sql)
         for pID, name in cursor:
             products.append({'pID': pID,
-                           'name': name})
+                             'name': name})
     except mysql.connector.Error as err:
         print(err)
         flash('Database error', 'error')
@@ -455,7 +531,13 @@ def products():
 @app.route('/product_details/<pID>', methods=['GET', 'POST'])
 def product_details(pID):
 
-    sql = 'SELECT * FROM Products P, belongs B WHERE P.pID = B.pID AND P.pID = %s'
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
+    sql = 'SELECT * FROM Products P LEFT JOIN belongs B ON P.pID = B.pID WHERE P.pID = %s'
     categories = []
 
     db = get_db()
@@ -466,7 +548,7 @@ def product_details(pID):
        rows = cursor.fetchall()
        
        product = {'pID': rows[0][0],
-                  'name':rows[0][1],
+                  'name': rows[0][1],
                   'supplier': rows[0][2],
                   'quantity': rows[0][3],
                   'price': rows[0][4],
@@ -485,55 +567,133 @@ def product_details(pID):
     finally:
         cursor.close()
 
-    return render_template('product_details.html', product=product, categories=categories, role=session["role"], title=rows[0][1])
+    return render_template('new_product.html', product=product, categories=categories, role=session["role"], title=rows[0][1])
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
 
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     if request.method == 'POST':
         
         sql1 = 'INSERT INTO Products(p_name, supplier, prod_quan, price, rel_year, isbn, image, p_status, p_description)' \
-              'VALUE(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+               'VALUE(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
         sql2 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
 
         db = get_db()
         cursor = db.cursor()
 
-        f = request.files["image"]
+        f = request.files["upload"]
+        cats = request.form.getlist('check')
 
         try:
             cursor.execute(sql1, (request.form["name"],
                                  request.form["supplier"],
-                                 int(request.form["quantity"]),
+                                 request.form["quantity"],
                                  request.form["price"],
                                  request.form["year"],
                                  request.form["isbn"],
                                  f.filename,
                                  request.form["status"],
                                  request.form["description"]))
-
-            path = os.path.abspath(os.path.join('static/images', f.filename))
-            f.save(path)
+            if f.filename != '':
+                path = os.path.abspath(os.path.join('static/images', f.filename))
+                f.save(path)
 
             pid = cursor.lastrowid
-            cats = request.form.getlist('check')
 
             for cat in cats: 
                 cursor.execute(sql2, (cat, pid))
 
             db.commit()
+            flash('Product added with id: {}'.format(pid), 'info')
         except IOError as err:
             db.rollback()
             print(err)
             flash('File error', 'error')
         except mysql.connector.Error as err:
             db.rollback()
-            print(err)
-            flash('Database error', 'error')
+            if err.errno == 1062:
+                print(err)
+                flash('Duplicate ISBN !', 'error')
+            else:
+                print(err)
+                flash('Database error', 'error')
         finally:
             cursor.close()
+    
+    return render_template('new_product.html', role=session["role"], title='Add Product')
 
-    return render_template('new_product.html', role=session["role"])
+@app.route('/update_product/<pID>', methods=['POST'])
+def update_product(pID):
+
+    sql1 = 'UPDATE Products ' \
+           'SET p_name = %s, supplier = %s, prod_quan = %s, price = %s, rel_year = %s, isbn = %s, image = %s, p_status = %s, p_description = %s ' \
+           'WHERE pID = %s '
+
+    sql2 = 'DELETE FROM belongs WHERE pID = %s'
+
+    sql3 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
+
+
+    db = get_db()
+    cursor = db.cursor()
+
+    f = request.files["upload"]
+    cats = request.form.getlist('check')
+
+    if f.filename == '':
+        img_name = request.form["image"]
+    else :
+        img_name = f.filename
+
+    try:
+        cursor.execute(sql1, (request.form["name"],
+                              request.form["supplier"],
+                              request.form["quantity"],
+                              request.form["price"],
+                              request.form["year"],
+                              request.form["isbn"],
+                              img_name,
+                              request.form["status"],
+                              request.form["description"],
+                              pID))
+
+        if f.filename != '':
+                path = os.path.abspath(os.path.join('static/images', request.form["image"]))
+                os.remove(path)
+                path = os.path.abspath(os.path.join('static/images', f.filename))
+                f.save(path)
+        
+        cursor.execute(sql2, (pID, ))
+
+        for cat in cats :
+            cursor.execute(sql3, (cat, pID))
+
+        db.commit()
+
+    except IOError as err:
+        db.rollback()
+        if err.errno == 1062:
+            print(err)
+            flash('Duplicate ISBN !', 'error')
+        else:
+            print(err)
+            flash('Database error', 'error')    
+    except mysql.connector.Error as err:
+        db.rollback()
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+    
+    flash('Product succesfully updated.', 'info')
+    return redirect(url_for('product_details', pID=pID))
+    
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

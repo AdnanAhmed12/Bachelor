@@ -6,7 +6,7 @@
     <div id="details">
       <div id ="buttons">
       <form action="index.html" method="post">
-        <input class="details_button" type="button" name="button" value="Change ">
+        <a href="{{url_for('change_product', pID=product["pID"])}}"><input class="details_button" type="button" value="Change"></a>
         <input class="details_button d_right" type="input" name="delete_product" value="Delete">
       </form>
     </div>
@@ -49,7 +49,7 @@
         </tr>
         <tr>
           <td>Image</td>
-          <td><img src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="placeholder" width="200px" height="200px"></td>
+          <td><img src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="placeholder" width="170px" height="200px"></td>
         </tr>
         <tr>
           <td>Categories</td>
