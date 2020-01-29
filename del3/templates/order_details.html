@@ -36,6 +36,9 @@
           </td>
         </tr>
       </table>
+      <form action="{{url_for('delete_order', oID=order["oID"])}}" method="POST">
+        <input type="submit" class="admin_button" name="delete" value="Delete">
+      </form>
     </div>
    </main>
 

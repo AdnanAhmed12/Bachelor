@@ -4,6 +4,7 @@ import mysql.connector
 import datetime
 import os
 from werkzeug.utils import secure_filename
+from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def close_db(error):
     if db is not None: 
         db.close()
 
-#Part User
+#-----------------------------------------------------Part User------------------------------------------------------
 
 @app.route('/', methods=['GET','POST'])
 def welcome():
@@ -54,18 +55,19 @@ def register():
 
     sql = 'INSERT INTO Users(username, u_password, city, country, address, first_name, last_name, u_role)'\
      'VALUE(%s, %s, %s, %s, %s, %s, %s, %s);'
-    
+
     db = get_db()
     cursor = db.cursor()
     try:
         cursor.execute(sql, (request.form["user"],
-                            request.form["password"], 
+                            sha256_crypt.hash(request.form["password"]), 
                             request.form["city"], 
                             str(request.form["country"]), 
                             request.form["address"], 
                             request.form["first_name"], 
                             request.form["last_name"],
                             'user'))
+        print(sha256_crypt.encrypt(request.form["password"]))
         db.commit()
     except mysql.connector.Error as err:
         db.rollback()
@@ -86,12 +88,12 @@ def register():
 @app.route('/login', methods=['POST'])
 def login(): 
 
-    sql = 'SELECT username, u_role FROM Users WHERE username = %s AND u_password = %s'
+    sql = 'SELECT username, u_password, u_role FROM Users WHERE username = %s'
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql, (request.form["log_user"], request.form["log_password"]))
+        cursor.execute(sql, (request.form["log_user"], ))
         row = cursor.fetchone()
     except mysql.connector.Error as err:
         print(err) 
@@ -99,9 +101,10 @@ def login():
     finally:
         cursor.close()
 
-    if row is not None:
+    if row is not None and sha256_crypt.verify(request.form["log_password"], row[1]):
+        a = (sha256_crypt.hash(request.form["log_password"]))
         session['username'] = row[0]
-        session['role'] = row[1]
+        session['role'] = row[2]
         session['items'] = 0
         session['cart'] = dict()
         return redirect(url_for('main'))
@@ -329,7 +332,7 @@ def categories():
 
     return render_template('main.html', products = products, cats=cats, title='categories', role=session["role"])
 
-#Part Admin
+#------------------------------------------------Part Admin-------------------------------------------------------------
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
@@ -430,6 +433,7 @@ def delete_user(username):
     finally:
         cursor.close()
 
+    flash('User {} has been deleted'.format(username))
     return redirect(url_for('users'))
 
 
@@ -498,6 +502,27 @@ def order_details(oID):
         cursor.close()
 
     return render_template('order_details.html', order=order, products=products, role=session["role"], title='Order: {}'.format(rows[0][0]))
+
+@app.route('/delete_order/<oID>', methods=['POST'])
+def delete_order(oID):
+
+    sql = 'DELETE FROM Orders WHERE oID = %s'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql, (oID, ))
+        db.commit()
+    except mysql.connector.Error as err:
+        db.rollback()
+        print(err)
+        flash('Database error', 'error')
+    finally:
+        cursor.close()
+
+    flash('Order {} has been deleted'.format(oID))
+    return redirect(url_for('orders'))
 
 @app.route('/products', methods=['GET', 'POST'])
 def products():
@@ -584,11 +609,14 @@ def add_product():
                'VALUE(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
         sql2 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
 
+        allowed = ['.jpg', '.png', '.jfif']
+
         db = get_db()
         cursor = db.cursor()
 
         f = request.files["upload"]
         cats = request.form.getlist('check')
+
 
         try:
             cursor.execute(sql1, (request.form["name"],
@@ -600,14 +628,22 @@ def add_product():
                                  f.filename,
                                  request.form["status"],
                                  request.form["description"]))
-            if f.filename != '':
-                path = os.path.abspath(os.path.join('static/images', f.filename))
-                f.save(path)
-
+            
             pid = cursor.lastrowid
 
             for cat in cats: 
                 cursor.execute(sql2, (cat, pid))
+
+            if f.filename != '':
+                extension = os.path.splitext(f.filename)
+                if extension[1].lower() in allowed:
+                    path = os.path.abspath(os.path.join('static/images', secure_filename(f.filename)))
+                    if not os.path.exists(path):
+                        f.save(path)
+                    else:
+                        raise Exception('File with that name already exists')
+                else:
+                    raise Exception('{} file is not allowed'.format(extension[1]))
 
             db.commit()
             flash('Product added with id: {}'.format(pid), 'info')
@@ -623,6 +659,10 @@ def add_product():
             else:
                 print(err)
                 flash('Database error', 'error')
+        except Exception as err:
+            db.rollback()
+            print(err)
+            flash(err, 'error')
         finally:
             cursor.close()
     
@@ -639,6 +679,7 @@ def update_product(pID):
 
     sql3 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
 
+    allowed = ['.jpg', '.png', '.jfif']
 
     db = get_db()
     cursor = db.cursor()
@@ -662,38 +703,79 @@ def update_product(pID):
                               request.form["status"],
                               request.form["description"],
                               pID))
-
-        if f.filename != '':
-                path = os.path.abspath(os.path.join('static/images', request.form["image"]))
-                os.remove(path)
-                path = os.path.abspath(os.path.join('static/images', f.filename))
-                f.save(path)
         
         cursor.execute(sql2, (pID, ))
 
         for cat in cats :
             cursor.execute(sql3, (cat, pID))
 
-        db.commit()
+        if f.filename != '':
+             extension = os.path.splitext(f.filename)
+             if extension[1].lower() in allowed:
+                if request.form["image"] != '':
+                    path = os.path.abspath(os.path.join('static/images', request.form["image"]))
+                    os.remove(path)
+                path = os.path.abspath(os.path.join('static/images', secure_filename(f.filename)))
+                if not os.path.exists(path):
+                    f.save(path)
+                else: 
+                    raise Exception('File with this name already exists.')
+             else:
+                 raise IOError('{} file is not allowed'.format(extension[1]))
 
+        db.commit()
+        flash('Product succesfully updated.', 'info')
     except IOError as err:
+        db.rollback()
+        print(err)
+        flash('File error', 'error')
+    except mysql.connector.Error as err:
         db.rollback()
         if err.errno == 1062:
             print(err)
             flash('Duplicate ISBN !', 'error')
         else:
             print(err)
-            flash('Database error', 'error')    
+            flash('Database error', 'error')
+    except Exception as err:
+        db.rollback()
+        print(err)
+        flash(err, 'error')
+    finally:
+        cursor.close()
+    
+    
+    return redirect(url_for('product_details', pID=pID))
+
+@app.route('/delete_product/<pID>', methods=['POST'])
+def delete_product(pID):
+
+    sql = 'DELETE FROM Products WHERE pID = %s'
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(sql, (pID, ))
+
+        if request.form["img"] != '':
+            path = os.path.abspath(os.path.join('static/images', request.form["img"]))
+            os.remove(path)
+
+        db.commit()
+        flash('Product {} has been deleted'.format(pID), 'info')
+    except IOError as err:
+        db.rollback()
+        print(err)
+        flash('File error', 'error')   
     except mysql.connector.Error as err:
         db.rollback()
         print(err)
         flash('Database error', 'error')
     finally:
         cursor.close()
-    
-    flash('Product succesfully updated.', 'info')
-    return redirect(url_for('product_details', pID=pID))
-    
+
+    return redirect(url_for('products'))
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
