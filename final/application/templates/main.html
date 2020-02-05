@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content%}
+
+<div id="index_main">
+    <main>
+      {% if title == 'main' %}
+       <h2>Newest Deals</h2>
+      {% elif title == 'search'%}
+       <h2>Search results</h2>
+       {% else %}
+       <h2>Categories: {% for cat in cats %}{{cat}}, {% endfor %}</h2>
+      {% endif %}
+        <div id="offers">
+         {% for product in products %}
+           <article class="offer">
+              <img class="left" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="50%" height=200px;>
+              <div class="right">
+                <div class="name"><a href="{{url_for('product', pid=product["pid"])}}">{{product["name"]}}</a></div>
+                <h4 class="price">{{product["price"]}} NOK</h4>
+              </div>
+           </article>
+           {% endfor %}
+     </div>
+     </main>
+   </div>
+   <aside class="categories">
+      <h3>Categories</h3>
+      <form id="tags" action="{{url_for("categories")}}" method="GET">
+        <label for="electronics">Electronics: </label><input type="checkbox" name="Electronics" value="1">
+        <label for="home">Home: </label><input type="checkbox" name="Home" value="1">
+        <label for="car">Car: </label><input type="checkbox" name="Car" value="1">
+        <label for="fashion">Fashion: </label><input type="checkbox" name="Fashion" value="1">
+        <label for="sports">Sport: </label><input type="checkbox" name="Sport" value="1">
+        <label for="media">Media: </label><input type="checkbox" name="Media" value="1">
+        <input id="apply" type="submit" value="Apply">
+      </form>
+    </aside>
+
+{% endblock %}
