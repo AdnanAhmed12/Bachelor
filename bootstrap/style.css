@@ -44,15 +44,17 @@ main{
   margin-top: 100px;
 }
 
-aside {
-  background-color: #52aa8a;
-  color: white;
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 10px;
-  padding-bottom:10px;
-  width: 10%;
-  min-width: 125px;
+@media (min-width: 992px) {
+  #cats{
+    position: fixed;
+    top: 200px;
+    right: 30px;
+    width: 12%
+  }
+}
+
+a {
+  color: black;
 }
 
 #cats_mobile{
