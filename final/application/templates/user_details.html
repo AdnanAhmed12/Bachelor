@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+    <h2>User: {{user["username"]}}</h2>
+    <div id="details">
+      <form id="role_change" action="{{url_for('change_role', username=user["username"])}}" method="POST">
+        <fieldset>
+          <legend>Change role</legend>
+          <label for="role">Role: </label>
+          <select id ="role_change_select" name="role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+            <input id="role_change_button" type="submit" name="change" value="Change">
+          </select>
+        </fieldset>
+      </form>
+      <table border="1">
+        <tr>
+          <td>Username</td>
+          <td>{{user["username"]}}</td>
+        </tr>
+        <tr>
+          <td>First name</td>
+          <td>{{user["first_name"]}}</td>
+        </tr>
+        <tr>
+          <td>Last name</td>
+          <td>{{user["last_name"]}}</td>
+        </tr>
+        <tr>
+          <td>Adress</td>
+          <td>{{user["address"]}}</td>
+        </tr>
+        <tr>
+          <td>City</td>
+          <td>{{user["city"]}}</td>
+        </tr>
+        <tr>
+          <td>Country</td>
+          <td>{{user["country"]}}</td>
+        </tr>
+        <tr>
+          <td>Role</td>
+          <td>{{user["role"]}}</td>
+        </tr>
+      </table>
+      <form action="{{url_for('delete_user', username=user["username"])}}" method="POST">
+        <input type="submit" class="admin_button" name="delete" value="Delete">
+      </form>
+    </div>
+   </main>
+
+{% endblock %}

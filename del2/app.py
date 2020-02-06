@@ -1,6 +1,7 @@
 from flask import Flask, render_template, g, url_for, request, redirect, flash, session
 from os import urandom
 import mysql.connector
+import datetime
 
 app = Flask(__name__)
 
@@ -24,23 +25,27 @@ def close_db(error):
 
 @app.route('/', methods=['GET','POST'])
 def welcome():
+
+    if 'username' in session:
+       return redirect(url_for('main'))
+
     return render_template('welcome.html', title='welcome')
 
 @app.route('/register', methods=['POST'])
 def register():
        
-    fields = {'username': request.form["user"],
-     'password': request.form["password"],
-     'conf_password': request.form["conf_password"],
-     'city': request.form["city"], 
-     'address': request.form["address"], 
-     'first_name': request.form["first_name"], 
-     'last_name': request.form["last_name"]}
+    fields = {'username': request.form["user"].strip(),
+     'password': request.form["password"].strip(),
+     'conf_password': request.form["conf_password"].strip(),
+     'city': request.form["city"].strip(), 
+     'address': request.form["address"].strip(), 
+     'first_name': request.form["first_name"].strip(), 
+     'last_name': request.form["last_name"].strip()}
     
     resp = validate_input(fields)
 
     if resp is not None:
-        flash(resp)
+        flash(resp, 'error')
         return render_template('welcome.html', title='welcome')
 
     sql = 'INSERT INTO Users(username, u_password, city, country, address, first_name, last_name)'\
@@ -61,23 +66,20 @@ def register():
         db.rollback()
         if err.errno == 1062:
             print(err)
-            flash('Username already exists')
+            flash('Username already exists', 'error')
         else:
             print(err)
-            flash('Registration failed')
+            flash('Database error', 'error')
 
         return render_template('welcome.html', title='welcome')
     finally:
         cursor.close()
 
-    flash('Registration succesfull')
+    flash('Registration succesfull', 'info')
     return redirect(url_for('welcome'))
 
 @app.route('/login', methods=['POST'])
 def login(): 
-
-    if 'username' in session:
-        redirect(url_for('main'))
 
     sql = 'SELECT username, u_password FROM Users WHERE username = %s AND u_password = %s'
     db = get_db()
@@ -88,6 +90,7 @@ def login():
         row = cursor.fetchone()
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -97,7 +100,7 @@ def login():
         session['cart'] = dict()
         return redirect(url_for('main'))
     else:
-        flash('Wrong username or password')
+        flash('Wrong username or password', 'error')
         return render_template('welcome.html', title='welcome')
 
 @app.route('/main', methods=['GET','POST'])
@@ -125,6 +128,7 @@ def main():
 
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -155,8 +159,12 @@ def product(pid):
                    'status': str(row[8]),
                    'description': str(row[9])}
 
+    except TypeError as err:
+        print(err)
+        return redirect(url_for('main'))
     except mysql.connector.Error as err:
         print(err) 
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
@@ -166,6 +174,7 @@ def product(pid):
 def add(pid):
     if pid in session["cart"]:
         session["cart"][pid]["quantity"] += int(request.form["quant"])
+        session["cart"][pid]["price"] += int(request.form["price"])*int(request.form["quant"])
     else:
         session["cart"].update({pid:{'quantity':int(request.form["quant"]),
                                  'name': request.form["name"],
@@ -186,16 +195,29 @@ def cart():
 
     return render_template('cart.html', title='cart', products=session["cart"], sum=sum)
 
+@app.route('/delete/<pid>', methods=['POST'])
+def delete(pid):
+    session["items"] -= session["cart"][pid]["quantity"]
+    del session["cart"][pid]
+    return redirect(url_for('cart'))
+
 @app.route('/buy', methods=['POST'])
 def buy():
+
+    if len(session["cart"]) == 0:
+        flash('Your cart is empty', 'info')
+        return redirect(url_for('cart'))
+
     sql1 = 'INSERT INTO Orders(num_prducts, order_date, culm_price, username) VALUE(%s, %s, %s, %s);'
     sql2 = 'INSERT INTO includes(pID, oID, quan) VALUE(%s, %s, %s);'
+
+    date = datetime.datetime.today().strftime('%d-%m-%Y')
 
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql1, (session["items"], '2009-11-31', request.form["sum"], session["username"]))
+        cursor.execute(sql1, (session["items"], date, request.form["sum"], session["username"]))
         oid = cursor.lastrowid
 
         for pid in session["cart"]:
@@ -204,10 +226,11 @@ def buy():
         db.commit()
         session["cart"] = dict()
         session["items"] = 0
-        flash('Thank You for buying. Your order id is: {}'.format(oid))
+        flash('Thank You for buying. Your order id is: {}'.format(oid), 'info')
     except mysql.connector.Error as err:
         db.rollback()
         print(err)
+        flash('Database error', 'error')
         return redirect(url_for('cart'))
     finally:
         cursor.close()
@@ -219,7 +242,13 @@ def search():
     if 'username' not in session: 
         return redirect(url_for('welcome'))
 
-    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(request.args["search"])
+    s_word = request.args["search"].strip()
+
+    if len(s_word) < 2: 
+        flash('Enter at least 2 characters', 'info')
+        return render_template('main.html', title='search')
+
+    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%";'.format(s_word)
 
     db = get_db()
     cursor = db.cursor()
@@ -237,11 +266,12 @@ def search():
 
     except mysql.connector.Error as err:
         print(err)
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
     if len(products) == 0:
-        flash('No items found with phrase: {}'.format(request.args["search"]))
+        flash('No items found with phrase: {}'.format(s_word), 'info')
 
     return render_template('main.html', title='search', products=products)
 
@@ -252,26 +282,48 @@ def categories():
 
     cats = request.args.to_dict()
 
-    sql1 = 'SELECT pID FROM belongs WHERE c_name = %s;'
-    sql2 = 'SELECT pID, p_name, price, image FROM Products WHERE pID = %s;'
+    if len(cats) == 0:
+        return redirect(url_for('main'))
+
+    sql_next = ''
+    i = 0
+    args = tuple()
+
+    for cat in cats:
+        if i == len(cats) - 1:
+            sql_next += 'c_name = %s'
+        else:
+            sql_next += 'c_name = %s OR '
+        i += 1
+        args += (cat ,)
+        
+    sql = 'SELECT P.pID, p_name, price, image ' \
+          'FROM Products P, Belongs B WHERE P.pID = B.pID AND ({0}) '\
+          'GROUP BY P.pID ' \
+          'HAVING COUNT(P.pID) > {1}'.format(sql_next, len(cats) - 1)
 
     db = get_db()
     cursor = db.cursor()
 
+    products = []
+
     try:
-        for cat in cats:
-            cursor.execute(sql1, (cat, ))
-            rows = cursor.fetchall()
-            print(cat)
-            print(rows)
+        cursor.execute(sql, args)
+        for pid, name, price, image in cursor:
+             product = {'pid': str(pid),
+                       'name': str(name),
+                       'price': str(price),  
+                       'image': str(image)}
+             products.append(product) 
     except mysql.connector.Error as err:
         print(err)
+        flash('Database error', 'error')
     finally:
         cursor.close()
 
-    return render_template('main.html', title='categories')
+    return render_template('main.html', products = products, cats=cats, title='categories')
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
     session.pop('cart', None)
@@ -291,6 +343,7 @@ def validate_input(fields):
         return 'Password not confirmed!'
 
     return None
-        
+
+
 if __name__  == '__main__': 
     app.run()

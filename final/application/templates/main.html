@@ -15,7 +15,7 @@
            <article class="offer">
               <img class="left" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="50%" height=200px;>
               <div class="right">
-                <a href="{{url_for('product', pid=product["pid"])}}"><div class="name">{{product["name"]}}</div></a>
+                <div class="name"><a href="{{url_for('product', pid=product["pid"])}}">{{product["name"]}}</a></div>
                 <h4 class="price">{{product["price"]}} NOK</h4>
               </div>
            </article>

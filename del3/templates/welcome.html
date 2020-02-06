@@ -25,11 +25,11 @@
         <input type="text" name="address" value="{{request.form["address"]}}"  placeholder="Address">
         <label for="country">Country:</label>
         <select name="country">
-          <option value="1"{% if request.form["country"] == "1" %} selected {% endif %}>Norway</option>
-          <option value="2"{% if request.form["country"] == "2" %} selected {% endif %}>Sweden</option>
-          <option value="3"{% if request.form["country"] == "3" %} selected {% endif %}>Denmark</option>
-          <option value="4"{% if request.form["country"] == "4" %} selected {% endif %}>Finland</option>
-          <option value="5"{% if request.form["country"] == "5" %} selected {% endif %}>Iceland</option>
+          <option value="Norway"{% if request.form["country"] == "Norway" %} selected {% endif %}>Norway</option>
+          <option value="Sweden"{% if request.form["country"] == "Sweden" %} selected {% endif %}>Sweden</option>
+          <option value="Denmark"{% if request.form["country"] == "Denmark" %} selected {% endif %}>Denmark</option>
+          <option value="Finland"{% if request.form["country"] == "Finland" %} selected {% endif %}>Finland</option>
+          <option value="Iceland"{% if request.form["country"] == "Iceland" %} selected {% endif %}>Iceland</option>
         </select>
         <label for="user">Username:</label>
         <input type="text" name="user" value="{{request.form["user"]}}"  placeholder="Username">

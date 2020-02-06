@@ -22,6 +22,10 @@ h1, h2, h3, h4 {
   font-family: "Tahoma", Geneva, sans-serif
 }
 
+td, li{
+  font-family: 'Ubuntu', sans-serif;
+}
+
 header {
   position: absolute;
   width: 100%;
@@ -35,6 +39,10 @@ header {
 p {
   font-family: 'Open Sans', sans-serif;
   font-size: 110%;
+}
+
+a{
+  text-decoration: none;
 }
 
 #cart {
@@ -182,10 +190,6 @@ main h2 {
   overflow: auto;
 }
 
-.name:hover {
-  text-decoration: underline;
-}
-
 .price {
   padding-top: 3%;
 }
@@ -193,6 +197,10 @@ main h2 {
 #offers a {
   text-decoration: none;
   color: black;
+}
+
+#offers a:hover{
+  text-decoration: underline;
 }
 
 aside {
@@ -370,9 +378,13 @@ footer p{
 
 .cart_name{
   width: 70%;
+  text-align: center;
+}
+
+.cart_name a{
   text-decoration: none;
   color: black;
-  text-align: center;
+  cursor: pointer;
 }
 
 .cart_price{
@@ -380,11 +392,7 @@ footer p{
   text-align: right;
 }
 
-.cart_name{
-  cursor: pointer;
-}
-
-.cart_name:hover{
+.cart_name a:hover{
   text-decoration: underline;
 }
 
@@ -470,4 +478,136 @@ footer p{
 .error{
   background-color: salmon;
   border: 1px solid red;
+}
+
+nav{
+  margin: 0;
+  position: absolute;
+  left: 62%;
+  top: 0px;
+  height: 50px;
+  border-right: 1px solid white;
+}
+
+#nav_list{
+  list-style-type: none;
+  margin: 0;
+}
+
+#nav_list li{
+  display: inline-block;
+  text-align: center;
+  border-left: 1px solid white;
+  height: 50px;
+  line-height: 50px;
+  margin: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+#admin_list{
+  width: 60%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+.admin_node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid black;
+  width: 100%;
+  margin-top: 10px;
+  height: 60px;
+}
+
+.admin_node p{
+  display: inline-block;
+  padding-left: 5px;
+}
+
+.admin_details{
+  background-color: #52aa5e;
+  color: white;
+  border: none;
+  height: 60px;
+}
+
+.admin_details:hover{
+  cursor: pointer;
+  background-color: #2bd9fe
+}
+
+#details{
+  width: 50%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+#details table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#details td {
+  padding: 10px;
+}
+
+#buttons {
+  width: 80%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.details_button{
+  background-color: #52aa5e;
+  color: white;
+  border: none;
+  width: 40%;
+  font-weight: bold;
+  border: none;
+  text-align: center;
+  height: 40px;
+  padding: 0;
+}
+
+.d_right{
+  float: right;
+}
+
+.admin_button{
+  display: block;
+  background-color: #52aa5e;
+  color: white;
+  margin: auto;
+  height: 40px;
+  width: 50%;
+  margin-top: 20px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.admin_button:hover{
+  background-color: #2bd9fe;
+}
+
+#role_change{
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+#role_change_select{
+  margin-left: 20px;
+}
+
+#role_change_button{
+  float: right;
+}
+
+#alter_from{
+  margin: auto;
 }

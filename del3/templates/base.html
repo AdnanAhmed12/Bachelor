@@ -12,6 +12,15 @@
     <h1>WEB-STORE</h1>
   </div>
   {% else %}
+    {% if role == 'admin' %}
+    <nav>
+      <ul id="nav_list">
+        <a href="{{url_for('products')}}"><li>Products</li></a>
+        <a href="{{url_for('orders')}}"><li>Orders</li></a>
+        <a href="{{url_for('users')}}"><li>Users</li></a>
+      </ul>
+    </nav>
+    {% endif %}
     <a href="{{url_for("main")}}">
     <div id="logo">
       <h1>WEB-STORE</h1>
@@ -54,4 +63,8 @@
     <p>Copyright: Web-Store Inc 2020</p>
   </div>
   </footer>
+
+  </body>
+  </html>
+  
 
