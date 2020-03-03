@@ -8,57 +8,117 @@
 	width: 500px;
 	padding-bottom: 90px;
 }
-header{
-	position: absolute;
-	width: 100%;
-	background-color: #52aa5e;
-	top: 0px;
-	height: 50px;
-	z-index: 4;
-	min-width: 1100px;
-}
-.logo{
-	position: absolute;
-  	height: 70px;
-  	background-color: #3aaed8;
-  	left: 5%;
-  	padding-left: 5px;
-  	padding-right: 5px;
-  	z-index: 5;
-}
-.logo h1{
-	color: white;
-  	margin: 0;
-  	padding: 0;
-  	line-height: 70px;
-  	font-family: "Arial Black", Gadget, sans-serif
-}
-h2 {
-	background-color: #52aa5e;
-  	margin: 0px;
-  	padding: 10px;
-  	color: white;
-}
-footer{
-  position: relative;
+html ,body{
   width: 100%;
-  height: 100px;
+  margin: 0;
+  padding: 0;
+}
+
+html{
+  position: relative;
+  min-height: 100%;
+}
+
+body{
+  margin-bottom: 140px;
+}
+
+h2{
+  background-color: #52aa5e;
+  color: white;
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#total{
+  background-color: #52aa5e;
+  color: white;
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  justify-content: flex-end;
+}
+
+
+header{
+  background-color: #52aa5e;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#logo{
+  background-color: #2bd9fe;
+  color: white;
   text-align: center;
-  margin-top: 40px;
-  border-top: 5px solid black;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  background-color: #388659;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+#mobile_logo{
+  background-color: #2bd9fe;
+  color: white;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+main{
+  margin-top: 100px;
+}
+
+@media (min-width: 992px) {
+  #cats{
+    position: fixed;
+    top: 200px;
+    right: 30px;
+    width: 12%
+  }
+}
+
+a {
+  color: black;
+}
+
+#cats_mobile{
+  margin-top: 20px;
+  background-color: #52aa8a;
+  min-width: 120px;
+  color: white;
+  padding-top: 10px;
+  padding-bottom:10px;
+}
+
+.p_name{
+  height: 110px;
+  overflow: auto;
+}
+
+footer{
+ position: absolute;
+ bottom: 0;
+ height: 100px;
+ background-color: #388659;
+ border: 2px solid black;
 }
 
 footer p{
-  color: white;
   margin: 0;
+  color: white;
+  font-size: 110%;
 }
 
-#footer_text {
-  position: absolute;
-  right: 50%;
-  top: 50%;
-  transform: translate(50%,-50%);
+nav{
+  background-color: #52aa5e;
+}
+
+.fa-bars{
+  color: white;
+}
+
+.navbar-brand{
+  color: white;
+}
+main h5{
+  font: bold;
+
+}
+#buy_info{
+  border: 2px solid;  
 }
