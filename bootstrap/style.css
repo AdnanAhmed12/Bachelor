@@ -53,6 +53,12 @@ main{
   }
 }
 
+@media (max-width: 992px) {
+  #reg{
+		margin-top: 20px;
+	}
+}
+
 a {
   color: black;
 }
@@ -94,5 +100,16 @@ nav{
 }
 
 .navbar-brand{
+  color: white;
+}
+main h5{
+  font: bold;
+
+}
+#buy_info{
+  border: 2px solid #52aa5e;
+}
+#total{
+  background-color: #52aa5e;
   color: white;
 }
