@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main>
+  {% if title == 'Add Product' %}
+  <h2>Add Product</h2>
+  <div id="details">
+  <form id="alter_from" action="{{url_for('add_product')}}" method="post" enctype = "multipart/form-data">
+    <table border="0">
+      <tr>
+        <td>Name</td>
+        <td><input type="text" name="name" value=""></td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td><input type="text" name="supplier" value=""></td>
+      </tr>
+      <tr>
+        <td>Quantity</td>
+        <td><input type="number" name="quantity" value="0"></td>
+      </tr>
+      <tr>
+        <td>Price</td>
+        <td><input type="number" name="price" value="0"></td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td><input type="text" name="year" value=""></td>
+      </tr>
+      <tr>
+        <td>ISBN</td>
+        <td><input type="text" name="isbn" value=""></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><select name="status">
+          <option value="new">New</option>
+          <option value="old">Old</option>
+        </select></td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td> <textarea rows="4" cols="50" name="description"></textarea></td>
+      </tr>
+      <tr>
+        <td>Image</td>
+        <td><input type="file" name="upload" value=""></td>
+      </tr>
+      <tr>
+        <td>Categories</td>
+        <td>
+          <input type="checkbox" name="check" value="Electronics">Electronics<br>
+          <input type="checkbox" name="check" value="Home">Home<br>
+          <input type="checkbox" name="check" value="Car">Car<br>
+          <input type="checkbox" name="check" value="Fashion">Fashion<br>
+          <input type="checkbox" name="check" value="Sport">Sport<br>
+          <input type="checkbox" name="check" value="Media">Media</br>
+        </td>
+      </tr>
+    </table>
+    <input class="admin_button" type="submit" name="" value="ADD">
+   </form>
+  </div>
+ </main>
+ {% else %}
+ <h2>Product: {{product["pID"]}}</h2>
+  <div id="details">
+  <form id="alter_from" action="{{url_for('update_product', pID=product["pID"])}}" method="post" enctype = "multipart/form-data">
+    <table border="0">
+      <tr>
+        <td>Name</td>
+        <td><input type="text" name="name" value="{{product["name"]}}"></td>
+      </tr>
+      <tr>
+        <td>Supplier</td>
+        <td><input type="text" name="supplier" value="{{product["supplier"]}}"></td>
+      </tr>
+      <tr>
+        <td>Quantity</td>
+        <td><input type="number" name="quantity" value="{{product["quantity"]}}"></td>
+      </tr>
+      <tr>
+        <td>Price</td>
+        <td><input type="number" name="price" value="{{product["price"]}}"></td>
+      </tr>
+      <tr>
+        <td>Year</td>
+        <td><input type="text" name="year" value="{{product["year"]}}"></td>
+      </tr>
+      <tr>
+        <td>ISBN</td>
+        <td><input type="text" name="isbn" value="{{product["isbn"]}}"></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><select name="status">
+          <option value="new"{% if product["status"] == 'new'%} selected {% endif %}>New</option>
+          <option value="old"{% if product["status"] == 'old'%} selected {% endif %}>Old</option>
+        </select></td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td> <textarea rows="4" cols="50" name="description">{{product["description"]}}</textarea></td>
+      </tr>
+      <tr>
+        <td>Image</td>
+        <td><img src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="None" width="200px" height="170px">
+            <input type="hidden" name="image" value="{{product["image"]}}"></td>
+      </tr>
+      <tr>
+        <td>Change Image</td>
+        <td><input type="file" name="upload"></td>
+      </tr>
+      <tr>
+        <td>Categories</td>
+        <td>
+          <input type="checkbox" name="check" value="Electronics"{% if 'Electronics' in categories %} checked {% endif %}>Electronics<br>
+          <input type="checkbox" name="check" value="Home"{% if 'Home' in categories %} checked {% endif %}>Home<br>
+          <input type="checkbox" name="check" value="Car"{% if 'Car' in categories %} checked {% endif %}>Car<br>
+          <input type="checkbox" name="check" value="Fashion"{% if 'Fashion' in categories %} checked {% endif %}>Fashion<br>
+          <input type="checkbox" name="check" value="Sport"{% if 'Sport' in categories %} checked {% endif %}>Sport<br>
+          <input type="checkbox" name="check" value="Media"{% if 'Media' in categories %} checked {% endif %}>Media</br>
+        </td>
+      </tr>
+    </table>
+    <input class="admin_button" type="submit" name="" value="UPDATE">
+   </form>
+   <form action="{{url_for('delete_product', pID=product["pID"])}}" method="POST">
+     <input type="hidden" name="img" value="{{product["image"]}}">
+     <input type="submit" name="delete" class="admin_button" value="DELETE">
+   </form>
+  </div>
+  {% endif %}
+ </main>
+{% endblock %}
