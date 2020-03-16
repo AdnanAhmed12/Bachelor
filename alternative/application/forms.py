@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField
 from wtforms.validators import InputRequired, Length, EqualTo
+from wtforms.fields.html5 import IntegerField
 
 class LoginForm(FlaskForm):
     log_username = StringField('Username:', validators=[InputRequired('Username requiered'), Length(min=3, max=20, message='Username must be at least 3 characters long')])
@@ -16,4 +17,11 @@ class RegisterForm(FlaskForm):
     username = StringField('Username:', validators=[InputRequired('Username required'), Length(min=3, max=20, message='Username must be at least 3 characters long')])
     password = PasswordField('Password:', validators=[InputRequired('Password required'), Length(min=3, max=20, message='Password must be at least 3 characters long')])
     confirm = PasswordField('Confirm Password:', validators=[InputRequired('Password must be confirmed'), EqualTo('password', message='Passwords do not match')])
-    submit = SubmitField('Register')
+    submit = SubmitField('Register') 
+
+class ProductForm(FlaskForm):
+    quan = IntegerField('Quantity:')
+    prod_submit = SubmitField('ADD TO CART')
+
+class BuyForm(FlaskForm):
+    buy = SubmitField('BUY')

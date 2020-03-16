@@ -27,11 +27,23 @@
       <input class="form-control mr-2" type="text" placeholder="Search">
       <input type="submit" name="" value="SEARCH" class="btn btn-info mt-2 mt-sm-0 mt-md-0 mt-lg-0">
     </form>
-    <a href="index.html" class="ml-md-auto"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 mr-3 btn btn-info"><i class="mr-2 fas fa-shopping-cart"></i>3</button></a>
-    <a href="#"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 btn btn-info">LOG OUT</button></a>
+    <a href="{{url_for('cart')}}" class="ml-md-auto"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 mr-3 btn btn-info"><i class="mr-2 fas fa-shopping-cart"></i>{{session['items']}}</button></a>
+    <a href="{{url_for('logout')}}"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 btn btn-info">LOG OUT</button></a>
   </div>
   </nav>
   {% endif %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+   {% for category, message in messages %}
+   <div class= "{{'alert alert-{}'.format(category)}} alert-dismissible fade show col-8 mt-2 ml-auto mr-auto rounded">
+     <h5>{{message}}</h5>
+     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   {% endfor %}
+{% endif %}
+{% endwith %}
 
   {% block content %}{% endblock %}
 

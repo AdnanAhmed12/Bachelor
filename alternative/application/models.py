@@ -1,7 +1,8 @@
-from application import db
+from application import db, login
+from flask_login import UserMixin
 
 includes = db.Table('includes',
-    db.Column('username', db.String(20), db.ForeignKey('Users.username'), primary_key=True),
+    db.Column('oID', db.Integer, db.ForeignKey('Orders.oID'), primary_key=True),
     db.Column('pID', db.Integer, db.ForeignKey('Products.pID'), primary_key=True),
     db.Column('quan', db.Integer)
 )
@@ -11,9 +12,9 @@ belongs = db.Table('belongs',
     db.Column('c_name', db.String(30), db.ForeignKey('Categories.c_name'), primary_key=True)
 )   
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     __tablename__ = 'Users'
-    username = db.Column(db.String(20), primary_key=True)
+    id = db.Column(db.String(20), primary_key=True)
     u_password = db.Column(db.String(200))
     city = db.Column(db.String(20))
     country = db.Column(db.String(20))
@@ -28,7 +29,7 @@ class Orders(db.Model):
     num_products = db.Column(db.Integer)
     order_date = db.Column(db.String(20))
     culm_price = db.Column(db.Integer)
-    username = db.Column(db.String(20), db.ForeignKey(Users.username))
+    id = db.Column(db.String(20), db.ForeignKey(Users.id))
     includes = db.relationship('Products', secondary=includes, lazy='subquery', backref=db.backref('included', lazy=True))
 
 class Products(db.Model):
@@ -42,7 +43,7 @@ class Products(db.Model):
     isbn = db.Column(db.String(20))
     image = db.Column(db.String(50))
     p_status = db.Column(db.String(10))
-    p_description = db.Column(db.String(400))
+    p_description = db.Column(db.Text(400))
     belongs = db.relationship('Categories', secondary=belongs, lazy='subquery', backref=db.backref('belonging', lazy=True))
 
 class Categories(db.Model):
@@ -50,3 +51,8 @@ class Categories(db.Model):
     c_name = db.Column(db.String(30), primary_key=True)
 
 db.create_all()
+
+@login.user_loader
+def load_user(id): 
+    return Users.query.get(id)
+

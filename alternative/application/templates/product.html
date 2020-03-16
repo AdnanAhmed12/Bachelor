@@ -1,37 +1,40 @@
 {% extends "base.html" %}
 {% block content%}
 
-<main>
-    <div id="buy_info">
-      <img id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="{{product["name"]}}" width="40%" height="360px">
-      <form id="info" action="{{url_for("add", pid=product["pid"])}}" method="POST">
-        <div id ="name"><h3>{{product["name"]}}</h3></div>
-        <h3 id="price">Price: {{product["price"]}} NOK</h3>
-        <label for="quant">Quantity:</label>
-        <input id="number" type="number" name="quant" value="1" max="9" min="1">
-        <input type="hidden" name="img" value="{{url_for("static", filename="images/{}".format(product["image"]))}}">
-        <input type="hidden" name="name" value="{{product["name"]}}">
-        <input type="hidden" name="price" value="{{product["price"]}}">
-        <input id="add" type="submit" name="add" value="ADD TO CART">
-      </form>
-    </div>
-    <h2>Details</h2>
-    <div id="details">
-      <div id="left_column">
-        <h4>Supplier:</h4>
-        <h4>Release Date:</h4>
-        <h4>ISBN:</h4>
-      </div>
-      <div id="right_column">
-        <h4>{{product["supplier"]}}</h4>
-        <h4>{{product["year"]}}</h4>
-        <h4>{{product["isbn"]}}</h4>
-      </div>
-    </div>
-    <h2>Description</h2>
-    <div id="dummy">
-    <p>{{product["description"]}}</p>
-   </div>
- </main>
+<main class="container col-10">
+  <img class="rounded d-lg-none col-12 mb-4 img-fluid" id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="" width="40%" height="360px">
+<div id="buy_info" class="d-flex mb-5">
+  <img class="rounded d-none d-lg-block" id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="" width="40%" height="360px">
+    <div class="d-flex flex-column text-center m-auto">
+    <div class="mb-5"><h3>{{product["p_name"]}}</h3></div>
+    <h3 class="mt-5">Price: {{product["price"]}} NOK</h3>
+    <form class="mt-5" action="" method="POST" class="">
+    {{prod_form.csrf_token}}
+    {{prod_form.quan.label}}
+    {{prod_form.quan(class_='mb-3', style='width: 40px;', value=1, min=1, max=9)}}
+    {{prod_form.prod_submit(class_='btn btn-success col-12')}}
+  </form>
+  </div>
+</div>
+<h2>Details</h2>
+<div class="container col-12 col-lg-8 mb-3">
+  <div class="row justify-content-between">
+    <h5>Supplier:</h5>
+    <h5>{{product["supplier"]}}</h5>
+  </div>
+  <div class="row justify-content-between">
+    <h5>Release Date:</h5>
+    <h5>{{product["rel_year"]}}</h5>
+  </div>
+  <div class="row justify-content-between">
+    <h5>ISBN:</h5>
+    <h5>{{product["isbn"]}}</h5>
+  </div>
+</div>
+<h2>Description</h2>
+<div class="mb-5">
+<p>{{product["p_description"]}}</p>
+</div>
+</main>
 
 {% endblock %}

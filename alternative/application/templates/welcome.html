@@ -30,20 +30,60 @@
                     {{log_form.csrf_token}}
                     {{reg_form.first_name.label}}
                     {{reg_form.first_name(class_='form-control', placeholder='First Name')}}
+                    <ul>
+                      {% for error in reg_form.first_name.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.last_name.label}}
                     {{reg_form.last_name(class_='form-control', placeholder='Last Name')}}
+                    <ul>
+                      {% for error in reg_form.last_name.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.city.label}}
                     {{reg_form.city(class_='form-control', placeholder='City')}}
+                    <ul>
+                      {% for error in reg_form.city.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.address.label}}
                     {{reg_form.address(class_='form-control', placeholder='Address')}}
+                    <ul>
+                      {% for error in reg_form.address.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.country.label}}
                     {{reg_form.country(class_='form-control')}}
+                    <ul>
+                      {% for error in reg_form.country.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.username.label}}
                     {{reg_form.username(class_='form-control', placeholder='Username')}}
+                    <ul>
+                      {% for error in reg_form.username.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.password.label}}
                     {{reg_form.password(class_='form-control', placeholder='Password')}}
+                    <ul>
+                      {% for error in reg_form.password.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.confirm.label}}
                     {{reg_form.confirm(class_='form-control', placeholder='Confirm')}}
+                    <ul>
+                      {% for error in reg_form.confirm.errors %}
+                        <li style="color: red; list-style-type: none;">{{error}}</li>
+                      {% endfor %}
+                    </ul>
                     {{reg_form.submit(class_='btn btn-success form-control mt-3')}}
                   </form>
                 </div>
