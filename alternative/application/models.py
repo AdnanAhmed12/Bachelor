@@ -78,7 +78,7 @@ if cat_exists is None:
 
 if prod_exists is None:
     cats = tuple(Categories.query.all())
-    elec, home, car, fash, sport, media = cats
+    car, elec, fash, home, media, sport = cats
     product = Products(p_name='Lenovo Thinkpad', supplier='Lenovo', prod_quan=100, price=899, rel_year='2018', isbn='437563952-0',
     image='thinkpad.png', p_status='new', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)
@@ -87,7 +87,7 @@ if prod_exists is None:
     image='ps4.png', p_status='new', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)
     elec.cat_products.append(product)
-    home.cat_products.append(product)
+    media.cat_products.append(product)
     product = Products(p_name='Wilson Tennis Racket', supplier='Wilson', prod_quan=150, price=399, rel_year='2015', isbn='617563452-0',
     image='tennis.png', p_status='new', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)

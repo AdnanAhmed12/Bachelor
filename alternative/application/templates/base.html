@@ -23,9 +23,9 @@
       <i class="fas fa-bars"></i>
     </button>
   <div class="collapse navbar-collapse" id="navbar_menu">
-    <form class="form-inline ml-auto" action="/action_page.php">
-      <input class="form-control mr-2" type="text" placeholder="Search">
-      <input type="submit" name="" value="SEARCH" class="btn btn-info mt-2 mt-sm-0 mt-md-0 mt-lg-0">
+    <form class="form-inline ml-auto" action="{{url_for('search')}}">
+      <input class="form-control mr-2" type="text" placeholder="Search" name="search">
+      <input type="submit" value="SEARCH" class="btn btn-info mt-2 mt-sm-0 mt-md-0 mt-lg-0">
     </form>
     <a href="{{url_for('cart')}}" class="ml-md-auto"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 mr-3 btn btn-info"><i class="mr-2 fas fa-shopping-cart"></i>{{session['items']}}</button></a>
     <a href="{{url_for('logout')}}"><button type="button" name="button" class="col-12 col-md-auto mt-2 mt-md-0 btn btn-info">LOG OUT</button></a>

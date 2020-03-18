@@ -1,8 +1,9 @@
 from application import app, db
-from flask import render_template, redirect, url_for, flash, session
+from flask import render_template, redirect, url_for, flash, session, request
 from application.forms import LoginForm, RegisterForm, ProductForm, BuyForm
-from application.models import Users, Products, Orders, Includes
+from application.models import Users, Products, Orders, Includes, Categories
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from sqlalchemy import or_
 from flask_login import current_user, logout_user, login_required, login_user
 
 @app.route('/', methods=['GET', 'POST'])
@@ -54,9 +55,6 @@ def main():
     except SQLAlchemyError as err:
         print(err)
         flash('Database error', 'danger')
-
-    product = Products.query.first()
-    o = product.included.all()
 
     return render_template('main.html', products=products, title='main')
 
@@ -117,6 +115,40 @@ def cart():
             print(err)
 
     return render_template('cart.html', products=session['cart'], sum=sum, buy_form=buy_form, title='cart')
+
+@app.route('/categories')
+@login_required
+def categories():
+    
+    cats = iter(request.args.to_dict())
+    category = Categories.query.filter_by(c_name=next(cats)).first()
+    cat_products = set(category.cat_products)
+    products = cat_products
+    
+    for cat in cats:
+        category = Categories.query.filter_by(c_name=cat).first()
+        cat_products = set(category.cat_products)
+        products = cat_products.intersection(products)
+
+    return render_template('main.html', products=products, title='category_earch')
+
+@app.route('/search')
+@login_required
+def search():
+    
+    s_word = '%{}%'.format(request.args['search'].strip())
+
+    if len(s_word) < 2: 
+        flash('Enter at least 2 characters', 'warning')
+        return render_template('main.html', title='search')
+
+    try:
+        products = Products.query.filter(or_(Products.p_name.ilike(s_word), Products.isbn.ilike(s_word), Products.rel_year.ilike(s_word), Products.p_description.ilike(s_word))).all()
+    except SQLAlchemyError as err:
+        flash('Database error', 'danger')
+        print(err)
+
+    return render_template('main.html', products=products, title='search')
 
 @app.route('/logout')
 @login_required
