@@ -6,9 +6,9 @@
 <div id="buy_info" class="d-flex mb-5">
   <img class="rounded d-none d-lg-block" id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="" width="40%" height="360px">
     <div class="d-flex flex-column text-center m-auto">
-    <div class="mb-5"><h3>{{product["p_name"]}}</h3></div>
-    <h3 class="mt-5">Price: {{product["price"]}} NOK</h3>
-    <form class="mt-5" action="" method="POST" class="">
+    <div class="mb-5"><h3>{{product['p_name']}}</h3></div>
+    <h3 class="mt-5">Price: {{product['price']}} NOK</h3>
+    <form class="mt-5" action="{{url_for('product', pid=product['pID'])}}" method="POST" class="">
     {{prod_form.csrf_token}}
     {{prod_form.quan.label}}
     {{prod_form.quan(class_='mb-3', style='width: 40px;', value=1, min=1, max=9)}}

@@ -1,7 +1,7 @@
 from application import app, db
 from flask import render_template, redirect, url_for, flash, session
 from application.forms import LoginForm, RegisterForm, ProductForm, BuyForm
-from application.models import Users, Products
+from application.models import Users, Products, Orders, Includes
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from flask_login import current_user, logout_user, login_required, login_user
 
@@ -55,6 +55,9 @@ def main():
         print(err)
         flash('Database error', 'danger')
 
+    product = Products.query.first()
+    o = product.included.all()
+
     return render_template('main.html', products=products, title='main')
 
 @app.route('/product/<pid>', methods=['GET', 'POST'])
@@ -83,7 +86,7 @@ def product(pid):
     
     return render_template('product.html', product=product, prod_form=prod_form, title=product.p_name)
 
-@app.route('/cart')
+@app.route('/cart', methods=['GET', 'POST'])
 @login_required
 def cart():
 
@@ -94,7 +97,24 @@ def cart():
         sum += product['price']
 
     if buy_form.validate_on_submit():
-        print('lkll')
+
+        try:
+            order = Orders(num_products=session['items'], order_date='12/12/20', culm_price=sum, user=current_user.id)
+            db.session.add(order)
+            
+            for pid in session['cart']:
+                includes = Includes(quan=session['cart'][pid]['quantity'])
+                includes.included_products = Products.query.get(pid)
+                order.including.append(includes)
+
+            db.session.commit()
+            session['cart'] = dict()
+            session['items'] = 0
+            flash('Transaction succesfull. Your order ID is {}'.format(order.oID), 'info')
+            return redirect(url_for('main'))
+        except SQLAlchemyError as err:
+            flash('Database error', 'danger')
+            print(err)
 
     return render_template('cart.html', products=session['cart'], sum=sum, buy_form=buy_form, title='cart')
 
