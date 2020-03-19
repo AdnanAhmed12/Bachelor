@@ -35,7 +35,6 @@ class Orders(db.Model):
     culm_price = db.Column(db.Integer)
     user = db.Column(db.String(20), db.ForeignKey('Users.id'))
 
-
 class Products(db.Model):
     __tablename__ = 'Products'
     pID = db.Column(db.Integer, primary_key=True)
@@ -49,7 +48,6 @@ class Products(db.Model):
     p_status = db.Column(db.String(10))
     p_description = db.Column(db.Text(400))
 
-    
 class Categories(db.Model):
     __tablename__ = 'Categories'
     c_name = db.Column(db.String(30), primary_key=True)
@@ -106,6 +104,33 @@ if prod_exists is None:
     db.session.add(product)
     elec.cat_products.append(product)
     home.cat_products.append(product)
+    product = Products(p_name='Kitchen Knife Set', supplier='Wustchof', prod_quan=80, price=299, rel_year='2012', isbn='733533121-0',
+    image='knife.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    home.cat_products.append(product)
+    product = Products(p_name='Hi-Fi System', supplier='Panasonic', prod_quan=110, price=599, rel_year='2017', isbn='143323991-0',
+    image='hifi.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    home.cat_products.append(product)
+    elec.cat_products.append(product)
+    media.cat_products.append(product)
+    product = Products(p_name='Car Phone Stand', supplier='Belkin', prod_quan=340, price=49, rel_year='2019', isbn='743323721-0',
+    image='phone.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    car.cat_products.append(product)
+    product = Products(p_name='Blue Shirt Men', supplier='Hugo Boss', prod_quan=210, price=139, rel_year='2018', isbn='842528121-0',
+    image='"shirt.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    fash.cat_products.append(product)
+    product = Products(p_name='GPS with Dashcam', supplier='Garmin', prod_quan=80, price=799, rel_year='2018', isbn='993123921-0',
+    image='gps.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    elec.cat_products.append(product)
+    car.cat_products.append(product)
+    product = Products(p_name='Dell Tower PC', supplier='Dell', prod_quan=100, price=1599, rel_year='2019', isbn='546529921-0',
+    image='pc.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    db.session.add(product)
+    elec.cat_products.append(product)
     db.session.commit()
 
 

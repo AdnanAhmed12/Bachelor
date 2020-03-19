@@ -122,8 +122,7 @@ def categories():
     
     cats = iter(request.args.to_dict())
     category = Categories.query.filter_by(c_name=next(cats)).first()
-    cat_products = set(category.cat_products)
-    products = cat_products
+    products = set(category.cat_products)
     
     for cat in cats:
         category = Categories.query.filter_by(c_name=cat).first()
