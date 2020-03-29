@@ -1,39 +1,33 @@
 {% extends "base.html" %}
 {% block content%}
 
-<main>
-    {% if title == 'users' %}
-    <h2>Users</h2>
-    <div id="admin_list">
-        {% for user in users %}
-        <div class="admin_node">
-              <p>{{user["username"]}}</p>
-              <p>{{user["first_name"]}} {{user["last_name"]}}</p>
-              <a href="{{url_for('user_details', username=user["username"])}}"><button class="admin_details" type="button" name="order_details">DETAILS</button></a>
-        </div>    
-        {% endfor %}
-    {% elif title == 'orders' %}
-    <h2>Orders</h2>
-    <div id="admin_list">
-        {% for order in orders %}
-        <div class="admin_node">
-              <p>ID: {{order["oID"]}}</p>
-              <p>{{order["username"]}}</p>
-              <a href="{{url_for('order_details', oID=order["oID"])}}"><button class="admin_details" type="button" name="order_details">DETAILS</button></a>
-        </div>    
-        {% endfor %}
-    {% else %}
-    <h2>Products</h2>
-    <a href="{{url_for('add_product')}}"><button class="admin_button" type="button" name="add_product">+ Add Product</button></a>
-    <div id="admin_list">
-        {% for product in products %}
-        <div class="admin_node">
-              <p>ID: {{product["pID"]}}</p>
-              <p>{{product["name"]}}</p>
-              <a href="{{url_for('product_details', pID=product["pID"])}}"><button class="admin_details" type="button" name="order_details">DETAILS</button></a>
-        </div>    
-        {% endfor %}
-    {% endif %}
+<main class='container col-11 col-md-9 col-lg-6'>
+  {% if title == 'users' %}
+   {% for user in users %}
+    <div class="row border border-dark align-items-center justify-content-between mt-2">
+        <p class="m-0 ml-1">{{user.id}}</p>
+        <p class="m-0">{{user.first_name}} {{user.last_name}}</p>
+        <a href="{{url_for('user', id=user.id)}}"><button type="button" name="button" class="btn btn-success">DETAILS</button></a>
+      </div>
+    {% endfor %}
+  {% elif title == 'orders' %}
+   {% for order in orders %}
+   <div class="row border border-dark align-items-center justify-content-between mt-2">
+    <p class="m-0 ml-1">ID: {{order.oID}}</p>
+    <p class="m-0">{{order.user}}</p>
+    <a href="{{url_for('order', oid=order.oID)}}"><button type="button" name="button" class="btn btn-success">DETAILS</button></a>
+  </div>
+   {% endfor %}
+  {% elif title == 'products' %}
+  <a href="{{url_for('add_product')}}"><button class="col-12 mb-2 btn btn-success">Add Product</button></a>
+   {% for product in products %}
+   <div class="row border border-dark align-items-center justify-content-between mt-2">
+    <p class="m-0 ml-1">{{product.pID}}</p>
+    <p class="m-0">{{product.p_name}}</p>
+    <a href="{{url_for('product_details', pid=product.pID)}}"><button type="button" name="button" class="btn btn-success">DETAILS</button></a>
+  </div>
+   {% endfor %}
+  {% endif %}
 </main>
 
 {% endblock %}

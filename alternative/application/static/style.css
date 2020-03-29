@@ -119,3 +119,7 @@ main h5{
   background-color: #52aa5e;
   color: white;
 }
+
+table td{
+  padding: 10px;
+}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content%}
+
+<main class="container col-8">
+    <h2>Order: {{order['oID']}}</h2>
+    <div id="details">
+      <table class="col-6" border="1">
+        <tr>
+          <td>Order ID</td>
+          <td>{{order['oID']}}</td>
+        </tr>
+        <tr>
+          <td>Number of Products</td>
+          <td>{{order['num_products']}}</td>
+        </tr>
+        <tr>
+          <td>Date</td>
+          <td>{{order['order_date']}}</td>
+        </tr>
+        <tr>
+          <td>Total price</td>
+          <td>{{order['culm_price']}}</td>
+        </tr>
+        <tr>
+          <td>Username</td>
+          <td>{{order['user']}}</td>
+        </tr>
+        <tr>
+          <td>Products</td>
+          <td>
+            <ul>
+            {% for item in includes %}
+              <li>{{item.included_products['p_name']}} &#215;{{item['quan']}}</li>
+            {% endfor %}  
+            </ul>
+          </td>
+        </tr>
+      </table>
+      <form action="#" method="POST">
+        <input type="submit" class="btn btn-success" name="delete" value="Delete">
+      </form>
+    </div>
+   </main>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content%}
+<main class="container col-10">
+    <h2>Add Product</h2>
+    <div class="container col-8">
+    <form class="container col-6" action="#" method="post" enctype = "multipart/form-data">
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.name.label}}
+            {{prod_form.name(class_='ml-2', value_='fdsf')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.supplier.label}}
+            {{prod_form.supplier(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.quantity.label}}
+            {{prod_form.quantity(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.price.label}}
+            {{prod_form.price(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.year.label}}
+            {{prod_form.year(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.isbn.label}}
+            {{prod_form.isbn(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.status.label}}
+            {{prod_form.status(class_='ml-2')}}
+        </div>
+        <div class="form-group row justify-content-between mb-2">
+            {{prod_form.description.label}}
+            {{prod_form.description(class_='ml-2')}}
+        </div>
+        <div class="form-group justify-content-between mb-2">
+            {{prod_form.upload.label}}
+            {{prod_form.upload(class_='ml-2')}}
+        </div>
+        <h3>Categories</h3>
+        <div class="form-check mb-2">
+            {{prod_form.elec(class_='ml-2')}}
+            {{prod_form.elec.label}}
+        </div>
+        <div class="form-check mb-2">
+            {{prod_form.home(class_='ml-2')}}
+            {{prod_form.home.label}}
+        </div>
+        <div class="form-check mb-2">
+            {{prod_form.car(class_='ml-2')}}
+            {{prod_form.car.label}}
+        </div>
+        <div class="form-check mb-2">
+            {{prod_form.fashion(class_='ml-2')}}
+            {{prod_form.fashion.label}}
+        </div>
+        <div class="form-check mb-2">
+            {{prod_form.sport(class_='ml-2')}}
+            {{prod_form.sport.label}}
+        </div>
+        <div class="form-check mb-2">
+            {{prod_form.media(class_='ml-2')}}
+            {{prod_form.media.label}}
+        </div>
+        {{prod_form.submit(class_='btn btn-success')}}
+     </form>
+    </div>
+   </main>
+{% endblock %}
