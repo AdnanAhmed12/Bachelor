@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField, TextAreaField, FileField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, HiddenField, TextAreaField, FileField, BooleanField, FieldList, FormField
 from wtforms.validators import InputRequired, Length, EqualTo
 from wtforms.fields.html5 import IntegerField
 
@@ -30,6 +30,14 @@ class RoleForm(FlaskForm):
     role = SelectField('Role:', choices=[('User', 'user'), ('Admin', 'admin')])
     change = SubmitField('Change')
 
+class CatForm(FlaskForm):
+    Electronics = BooleanField('Electronics:')
+    Home = BooleanField('Home:')
+    Car = BooleanField('Car:')
+    Fashion = BooleanField('Fashion:')
+    Sports = BooleanField('Sports:')
+    Media = BooleanField('Media:')
+
 class ProductForm(FlaskForm):
     name = StringField('Name:')
     supplier = StringField('Supplier:')
@@ -40,11 +48,7 @@ class ProductForm(FlaskForm):
     status = SelectField('Status:', choices=[('new', 'New'), ('old', 'Old')])
     description = TextAreaField('Description:')
     upload = FileField('Image:')
-    elec = BooleanField('Electronics:')
-    home = BooleanField('Home:')
-    car = BooleanField('Car:')
-    fashion = BooleanField('Fashion:')
-    sport = BooleanField('Sports:')
-    media = BooleanField('Media:')
+    categories = FormField(CatForm)
     submit = SubmitField('ADD')
     
+

@@ -1,4 +1,4 @@
-from application import app, db, admin_role
+from application import app, db, admin_role, images
 from flask import render_template, redirect, url_for, flash, session, request, current_app
 from application.forms import LoginForm, RegisterForm, AddForm, BuyForm, RoleForm, ProductForm
 from application.models import Users, Products, Orders, Includes, Categories
@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import or_
 from flask_login import current_user, logout_user, login_required, login_user
 from flask_principal import identity_loaded, RoleNeed, identity_changed, Identity
+import os
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,7 +37,7 @@ def welcome():
     if reg_form.validate_on_submit():
         try:
             user = Users(id=reg_form.username.data, u_password=reg_form.password.data, city=reg_form.city.data, country=reg_form.country.data,
-             address=reg_form.address.data, first_name=reg_form.first_name.data, last_name=reg_form.last_name.data, u_role='admin')
+             address=reg_form.address.data, first_name=reg_form.first_name.data, last_name=reg_form.last_name.data, u_role='user')
             db.session.add(user)
             db.session.commit()
             
@@ -72,7 +73,7 @@ def product(pid):
         print(err)
         flash('Database error', 'danger')
 
-    prod_form = AddtForm()
+    prod_form = AddForm()
 
     if prod_form.validate_on_submit(): 
         if pid in session["cart"]:
@@ -208,7 +209,53 @@ def product_details(pid):
     
     prod_form = ProductForm()
 
-    product = Products.query.filter_by(pID=pid).first()
+    try:
+        product = Products.query.filter_by(pID=pid).first()
+        categories = product.products_cat.all()
+    except SQLAlchemyError as err:
+        print(err)
+        flash('Database error', 'danger')
+
+    if prod_form.validate_on_submit():
+        
+        img = prod_form.upload.data.filename
+
+        try:
+            if img != '':
+                img = images.resolve_conflict(os.path.abspath(app.config['UPLOADED_IMAGES_DEST']), img)
+                
+            product.p_name = prod_form.name.data 
+            product.supplier = prod_form.supplier.data 
+            product.prod_quan = prod_form.quantity.data
+            product.price = prod_form.price.data
+            product.rel_year = prod_form.year.data
+            product.isbn = prod_form.isbn.data
+            product.p_status = prod_form.status.data
+            product.p_description = prod_form.description.data
+
+            cats = prod_form.categories.data 
+
+            for name, val in cats.items():
+                if val == True:
+                    cat = Categories.query.filter_by(c_name=name).first()
+                    product.products_cat.append(cat)
+
+            if img != '':
+                if product.image != '':
+                    old_path = os.path.abspath(os.path.join(app.config['UPLOADED_IMAGES_DEST'], product.image))
+                    #os.remove(old_path)
+                product.image = img
+                images.save(prod_form.upload.data)
+
+            db.session.commit()
+
+        except SQLAlchemyError as err:
+            print(err)
+            flash('Database error', 'danger')
+        except IOError as err:
+            print(err)
+            flash('File error', 'danger')
+
     categories = product.products_cat.all()
 
     prod_form.name.data = product.p_name
@@ -222,27 +269,60 @@ def product_details(pid):
 
     for category in categories:
         if category.c_name == 'Electronics':
-            prod_form.elec.data = True
+            prod_form.categories.Electronics.data = True
         elif category.c_name == 'Home':
-            prod_form.home.data = True
+            prod_form.categories.Home.data = True
         elif category.c_name == 'Fashion':
-            prod_form.fashion.data = True
+            prod_form.categories.Fashion.data = True
         elif category.c_name == 'Car':
-            prod_form.car.data = True
+            prod_form.categories.Car.data = True
         elif category.c_name == 'Sports':
-            prod_form.sport.data = True
+            prod_form.categories.Sports.data = True
         elif category.c_name == 'Media':
-            prod_form.media.data = True
+            prod_form.categories.Media.data = True
 
-    return render_template('product_edit.html', product=product, categories=categories, prod_form=prod_form, title='{}'.format(product.p_name))
+    return render_template('product_edit.html', product=product, prod_form=prod_form, title='{}'.format(product.p_name))
 
-@app.route('/add_product')
+@app.route('/add_product', methods=['GET', 'POST'])
 @login_required 
 @admin_role.require(http_exception=403)
 def add_product():
     prod_form = ProductForm()
 
-    return render_template('product_edit.html', prod_form=prod_form, title='add_product')
+    if prod_form.validate_on_submit():
+
+        img = prod_form.upload.data.filename 
+        
+        if img != '':
+            img = images.resolve_conflict(os.path.abspath(app.config['UPLOADED_IMAGES_DEST']), img)
+
+        try:
+            product = Products(p_name=prod_form.name.data, supplier=prod_form.supplier.data, prod_quan=prod_form.quantity.data,
+            price=prod_form.price.data, rel_year=prod_form.year.data, isbn=prod_form.isbn.data, image=img,
+            p_status=prod_form.status.data, p_description=prod_form.description.data)
+            
+            db.session.add(product)
+    
+            if img != '':
+                images.save(prod_form.upload.data)
+            
+            cats = prod_form.categories.data 
+
+            for name, val in cats.items():
+                if val == True:
+                    cat = Categories.query.filter_by(c_name=name).first()
+                    product.products_cat.append(cat)
+
+            db.session.commit()
+
+        except SQLAlchemyError as err:
+            print(err)
+            flash('Database error', 'danger')
+        except IOError as err:
+            print(err)
+            flash('File error', 'danger')
+
+    return render_template('product_add.html', prod_form=prod_form, title='add_product')
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):

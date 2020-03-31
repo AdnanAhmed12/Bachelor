@@ -58,6 +58,7 @@ db.create_all()
 
 prod_exists = Products.query.first()
 cat_exists = Categories.query.first()
+admin = Users.query.filter_by(u_role='admin').first()
 
 if cat_exists is None:
     category = Categories(c_name='Electronics')
@@ -133,7 +134,10 @@ if prod_exists is None:
     elec.cat_products.append(product)
     db.session.commit()
 
-
+if admin is None:
+    admin = Users(id='admin', u_password='admin', u_role='admin')
+    db.session.add(admin)
+    db.session.commit()
 
 @login.user_loader
 def load_user(id): 
