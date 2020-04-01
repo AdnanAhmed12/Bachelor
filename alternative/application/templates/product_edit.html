@@ -44,6 +44,9 @@
         {{prod_form.categories}}
         {{prod_form.submit(class_='btn btn-success')}}
      </form>
+     <form class="mt-2" action="{{url_for('product_details', pid=product['pID'])}}" method="POST">
+        {{del_form.submit(class_='btn btn-danger')}}
+     </form>
     </div>
    </main>
 {% endblock %}

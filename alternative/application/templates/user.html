@@ -44,9 +44,9 @@
           <td>{{user['role']}}</td>
         </tr>
       </table>
-      <form class="col-6 m-auto" action="#" method="POST">
-        <input type="submit" class="btn btn-success col-12 mt-2" name="delete" value="Delete">
-      </form>
+      <form class="mt-2" action="{{url_for('user', id=user['id'])}}" method="POST">
+        {{del_form.submit(class_='btn btn-danger')}}
+     </form>
     </div>
    </main>
 

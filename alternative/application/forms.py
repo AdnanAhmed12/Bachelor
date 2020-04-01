@@ -51,4 +51,5 @@ class ProductForm(FlaskForm):
     categories = FormField(CatForm)
     submit = SubmitField('ADD')
     
-
+class DeleteForm(FlaskForm):
+    submit = SubmitField('Delete')

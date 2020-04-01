@@ -1,6 +1,6 @@
 from application import app, db, admin_role, images
 from flask import render_template, redirect, url_for, flash, session, request, current_app
-from application.forms import LoginForm, RegisterForm, AddForm, BuyForm, RoleForm, ProductForm
+from application.forms import LoginForm, RegisterForm, AddForm, BuyForm, RoleForm, ProductForm, DeleteForm
 from application.models import Users, Products, Orders, Includes, Categories
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import or_
@@ -221,9 +221,11 @@ def product_details(pid):
         img = prod_form.upload.data.filename
 
         try:
-            if img != '':
+            if img != '' and os.path.isfile(os.path.join(app.config['UPLOADED_IMAGES_DEST'], img)):
                 img = images.resolve_conflict(os.path.abspath(app.config['UPLOADED_IMAGES_DEST']), img)
-                
+            
+            db.session.add(product)
+
             product.p_name = prod_form.name.data 
             product.supplier = prod_form.supplier.data 
             product.prod_quan = prod_form.quantity.data
@@ -232,6 +234,9 @@ def product_details(pid):
             product.isbn = prod_form.isbn.data
             product.p_status = prod_form.status.data
             product.p_description = prod_form.description.data
+
+            for cat in categories:
+                product.products_cat.remove(cat)
 
             cats = prod_form.categories.data 
 
@@ -243,11 +248,13 @@ def product_details(pid):
             if img != '':
                 if product.image != '':
                     old_path = os.path.abspath(os.path.join(app.config['UPLOADED_IMAGES_DEST'], product.image))
-                    #os.remove(old_path)
+                    os.remove(old_path)
                 product.image = img
                 images.save(prod_form.upload.data)
 
             db.session.commit()
+
+            categories = product.products_cat.all()
 
         except SQLAlchemyError as err:
             print(err)
@@ -255,8 +262,6 @@ def product_details(pid):
         except IOError as err:
             print(err)
             flash('File error', 'danger')
-
-    categories = product.products_cat.all()
 
     prod_form.name.data = product.p_name
     prod_form.supplier.data = product.supplier
@@ -287,13 +292,14 @@ def product_details(pid):
 @login_required 
 @admin_role.require(http_exception=403)
 def add_product():
+    
     prod_form = ProductForm()
-
+   
     if prod_form.validate_on_submit():
 
         img = prod_form.upload.data.filename 
-        
-        if img != '':
+
+        if img != '' and os.path.isfile(os.path.join(app.config['UPLOADED_IMAGES_DEST'], img)):
             img = images.resolve_conflict(os.path.abspath(app.config['UPLOADED_IMAGES_DEST']), img)
 
         try:
