@@ -5,7 +5,7 @@
   <div class="row justify-content-between">
     <div class="col-12 col-lg-6">
   				<h2>Log in</h2>
-  					<form class="form-group" action="{{url_for("welcome")}}" method="POST">
+  					<form class="form-group" action="{{url_for('welcome')}}" method="POST">
               {{log_form.csrf_token}}
               {{log_form.log_username.label}}
               {{log_form.log_username(class_='form-control', placeholder='Username')}}
@@ -26,7 +26,7 @@
             </div>
               <div class="col-12 col-lg-6" id="reg">
                 <h2>Register</h2>
-                  <form class="form-group" action="{{url_for("welcome")}}" method="POST">
+                  <form class="form-group" action="{{url_for('register')}}" method="POST">
                     {{log_form.csrf_token}}
                     {{reg_form.first_name.label}}
                     {{reg_form.first_name(class_='form-control', placeholder='First Name')}}

@@ -15,7 +15,6 @@
     <h5 class="">Total: {{sum}} NOK</h5>
   </div>
   <form action="{{url_for('cart')}}" method="POST" class="p-5 d-flex justify-content-center">
-    {{buy_form.csrf_token}}
     {{buy_form.buy(class_='btn btn-md btn-success col-6')}}
   </form>
 </main>

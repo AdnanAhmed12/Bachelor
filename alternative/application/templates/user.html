@@ -41,10 +41,10 @@
         </tr>
         <tr>
           <td>Role</td>
-          <td>{{user['role']}}</td>
+          <td>{{user['u_role']}}</td>
         </tr>
       </table>
-      <form class="mt-2" action="{{url_for('user', id=user['id'])}}" method="POST">
+      <form class="mt-2" action="{{url_for('delete_user', id=user['id'])}}" method="POST">
         {{del_form.submit(class_='btn btn-danger')}}
      </form>
     </div>

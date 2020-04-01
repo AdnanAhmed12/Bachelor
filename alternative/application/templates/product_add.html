@@ -3,7 +3,7 @@
 <main class="container col-10">
     <h2>Add Product</h2>
     <div class="container col-8">
-    <form class="container col-6" action="{{url_for('add_product')}}" method="post" enctype = "multipart/form-data">
+    <form class="container col-6" action="{{url_for('add_product')}}" method="POST" enctype = "multipart/form-data">
             {{prod_form.csrf_token}}
         <div class="form-group row justify-content-between mb-2">
             {{prod_form.name.label}}

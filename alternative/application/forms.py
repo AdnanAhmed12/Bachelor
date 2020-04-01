@@ -27,7 +27,7 @@ class BuyForm(FlaskForm):
     buy = SubmitField('BUY')
 
 class RoleForm(FlaskForm):
-    role = SelectField('Role:', choices=[('User', 'user'), ('Admin', 'admin')])
+    role = SelectField('Role:', choices=[('user', 'User'), ('admin', 'Admin')])
     change = SubmitField('Change')
 
 class CatForm(FlaskForm):

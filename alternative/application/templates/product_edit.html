@@ -3,7 +3,7 @@
 <main class="container col-10">
     <h2>{{title}}</h2>
     <div class="container col-8">
-    <form class="container col-6" action="{{url_for('product_details', pid=product['pID'])}}" method="post" enctype = "multipart/form-data">
+    <form class="container col-6" action="{{url_for('product_details', pid=product['pID'])}}" method="POST" enctype = "multipart/form-data">
             {{prod_form.csrf_token}}
         <div class="form-group row justify-content-between mb-2">
             {{prod_form.name.label}}
@@ -44,7 +44,8 @@
         {{prod_form.categories}}
         {{prod_form.submit(class_='btn btn-success')}}
      </form>
-     <form class="mt-2" action="{{url_for('product_details', pid=product['pID'])}}" method="POST">
+     <form class="mt-2" action="{{url_for('delete_product', pid=product['pID'])}}" method="POST">
+        {{del_form.csrf_token}}
         {{del_form.submit(class_='btn btn-danger')}}
      </form>
     </div>

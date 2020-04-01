@@ -20,8 +20,8 @@ def welcome():
 
     if log_form.validate_on_submit():
         try:
-            user = Users.query.filter_by(id=log_form.log_username.data, u_password=log_form.log_password.data).first()
-            if user is not None:
+            user = Users.query.filter_by(id=log_form.log_username.data).first()
+            if user is not None and user.check_password(log_form.log_password.data):
                 login_user(user)
                 session['items'] = 0
                 session['cart'] = dict()
@@ -31,20 +31,32 @@ def welcome():
         except SQLAlchemyError as err: 
             print(err)
             flash('Database error', 'danger')
-        
-        return redirect(url_for('welcome'))
 
-    if reg_form.validate_on_submit():
+    return render_template('welcome.html', log_form=log_form, reg_form=reg_form, title='welcome')
+
+@app.route('/register', methods=['POST'])
+def register():
+
+    if current_user.is_authenticated:
+        return redirect(url_for('main'))
+
+    log_form = LoginForm()
+    reg_form = RegisterForm()
+
+    if reg_form.validate():
+
         try:
-            user = Users(id=reg_form.username.data, u_password=reg_form.password.data, city=reg_form.city.data, country=reg_form.country.data,
+            user = Users(id=reg_form.username.data, city=reg_form.city.data, country=reg_form.country.data,
              address=reg_form.address.data, first_name=reg_form.first_name.data, last_name=reg_form.last_name.data, u_role='user')
+            user.set_password(reg_form.password.data)
             db.session.add(user)
             db.session.commit()
             
             flash('Registration succesfull', 'success')
+            return redirect(url_for('welcome'))
         except IntegrityError as err:
             print(err)
-            flash('User alredy exists', 'warning')
+            flash('User alredy exists', 'warning')  
         except SQLAlchemyError as err:
             print(err)
             flash('Database error')
@@ -99,7 +111,7 @@ def cart():
     for product in session['cart'].values():
         sum += product['price']
 
-    if buy_form.validate_on_submit():
+    if buy_form.is_submitted():
 
         try:
             order = Orders(num_products=session['items'], order_date='12/12/20', culm_price=sum, user=current_user.id)
@@ -181,7 +193,7 @@ def products():
 
     return render_template('list.html', products=products, title='products')
 
-@app.route('/user/<id>')
+@app.route('/user/<id>', methods=['GET', 'POST'])
 @login_required 
 @admin_role.require(http_exception=403)
 def user(id):
@@ -189,10 +201,26 @@ def user(id):
     user = Users.query.filter_by(id=id).first()
 
     role_form = RoleForm()
+    del_form = DeleteForm()
 
-    return render_template('user.html', user=user, role_form=role_form, title='{}'.format(user.id))
+    if role_form.validate_on_submit():
+        user.u_role = role_form.role.data
+        db.session.add(user)
+        db.session.commit()
+    
+    return render_template('user.html', user=user, role_form=role_form, del_form=del_form, title='{}'.format(user.id))
 
-@app.route('/order/<oid>')
+@app.route('/delete_user/<id>', methods=['POST'])
+@login_required 
+@admin_role.require(http_exception=403)
+def delete_user(id):
+
+    user = Users.query.filter_by(id=id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('users'))
+
+@app.route('/delete_order/<oid>')
 @login_required 
 @admin_role.require(http_exception=403)
 def order(oid):
@@ -200,7 +228,13 @@ def order(oid):
     order = Orders.query.filter_by(oID=oid).first()
     includes = order.including.join(Products).all()
 
-    return render_template('order.html', order=order, includes=includes, title='Order: {}'.format(order.oID))
+    del_form = DeleteForm()
+
+    if del_form.is_submitted():
+        db.session.delete(order)
+        db.session.commit()
+
+    return render_template('order.html', order=order, includes=includes, del_form=del_form, title='Order: {}'.format(order.oID))
 
 @app.route('/product_details/<pid>', methods=['GET', 'POST'])
 @login_required 
@@ -208,6 +242,7 @@ def order(oid):
 def product_details(pid):
     
     prod_form = ProductForm()
+    del_form = DeleteForm()
 
     try:
         product = Products.query.filter_by(pID=pid).first()
@@ -215,7 +250,7 @@ def product_details(pid):
     except SQLAlchemyError as err:
         print(err)
         flash('Database error', 'danger')
-
+        
     if prod_form.validate_on_submit():
         
         img = prod_form.upload.data.filename
@@ -286,7 +321,31 @@ def product_details(pid):
         elif category.c_name == 'Media':
             prod_form.categories.Media.data = True
 
-    return render_template('product_edit.html', product=product, prod_form=prod_form, title='{}'.format(product.p_name))
+    return render_template('product_edit.html', product=product, prod_form=prod_form, del_form=del_form, title='{}'.format(product.p_name))
+
+@app.route('/delete_product/<pid>', methods=['POST'])
+@login_required 
+@admin_role.require(http_exception=403)
+def delete_product(pid):
+    
+    product = Products.query.filter_by(pID=pid).first()
+
+    try:
+        db.session.delete(product)
+
+        if product.image != '':
+            path = os.path.abspath(os.path.join(app.config['UPLOADED_IMAGES_DEST'], product.image))
+            os.remove(path)
+
+        db.session.commit()
+        return redirect(url_for('products'))
+    except SQLAlchemyError as err:
+            print(err)
+            flash('Database error', 'danger')
+    except IOError as err:
+            print(err)
+            flash('File error', 'danger')
+
 
 @app.route('/add_product', methods=['GET', 'POST'])
 @login_required 
@@ -340,6 +399,11 @@ def on_identity_loaded(sender, identity):
 def page_not_found(e):
     flash('Access denied', 'warning')
     return redirect(url_for('main'))
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return redirect(url_for('welcome'))
+
 
 @app.route('/logout')
 @login_required

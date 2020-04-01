@@ -37,6 +37,7 @@
         </tr>
       </table>
       <form class="mt-2" action="{{url_for('order', oid=order['oID'])}}" method="POST">
+        {{del_form.csrf_token}}
         {{del_form.submit(class_='btn btn-danger')}}
      </form>
     </div>

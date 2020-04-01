@@ -1,6 +1,7 @@
 from application import db, login
 from sqlalchemy.sql import exists 
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 belongs = db.Table('belongs', 
     db.Column('pID', db.Integer, db.ForeignKey('Products.pID'), primary_key=True),
@@ -26,6 +27,12 @@ class Users(UserMixin, db.Model):
     last_name = db.Column(db.String(30))
     u_role = db.Column(db.String(10))
     user_orders = db.relationship('Orders', backref='orders_users')
+
+    def set_password(self, password):
+        self.u_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.u_password, password)
 
 class Orders(db.Model):
     __tablename__ = 'Orders'
