@@ -9,6 +9,8 @@ from flask_principal import identity_loaded, RoleNeed, identity_changed, Identit
 import os
 
 
+
+
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     
@@ -84,23 +86,32 @@ def product(pid):
     except SQLAlchemyError as err:
         print(err)
         flash('Database error', 'danger')
-
-    prod_form = AddForm()
-
-    if prod_form.validate_on_submit(): 
-        if pid in session["cart"]:
-            session['cart'][pid]['quantity'] += int(prod_form.quan.data)
-            session['cart'][pid]['price'] += int(product.price)*int(prod_form.quan.data)
-        else:
-            session['cart'].update({pid:{'quantity':int(prod_form.quan.data),
-                                    'name': product.p_name,
-                                    'price': int(product.price)*int(prod_form.quan.data),
-                                    'img': product.image}})
-        
-        session["items"] += int(prod_form.quan.data)
     
-    return render_template('product.html', product=product, prod_form=prod_form, title=product.p_name)
+    return render_template('product.html', product=product, title=product.p_name)
 
+@app.route('/add', methods=['POST'])
+@login_required
+def add():
+    print('Start')
+    quan = request.form.get('quan', None)
+    pid =  request.form.get('pid', None)
+    price =  request.form.get('price', None)
+    name =  request.form.get('name', None)
+    img =  request.form.get('img', None)
+
+    if pid in session["cart"]:
+        session['cart'][pid]['quantity'] += int(quan)
+        session['cart'][pid]['price'] += int(price)*int(quan)
+    else:
+        session['cart'].update({pid:{'quantity':int(quan),
+                                    'name': name,
+                                    'price': int(price)*int(quan),
+                                    'img':img}})
+        
+    session["items"] += int(quan)
+    
+    return '{}'.format(session["items"])
+    
 @app.route('/cart', methods=['GET', 'POST'])
 @login_required
 def cart():
@@ -136,15 +147,19 @@ def cart():
 @app.route('/categories')
 @login_required
 def categories():
+
+    try:
+        cats = iter(request.args.to_dict())
+        category = Categories.query.filter_by(c_name=next(cats)).first()
+        products = set(category.cat_products)
     
-    cats = iter(request.args.to_dict())
-    category = Categories.query.filter_by(c_name=next(cats)).first()
-    products = set(category.cat_products)
-    
-    for cat in cats:
-        category = Categories.query.filter_by(c_name=cat).first()
-        cat_products = set(category.cat_products)
-        products = cat_products.intersection(products)
+        for cat in cats:
+            category = Categories.query.filter_by(c_name=cat).first()
+            cat_products = set(category.cat_products)
+            products = cat_products.intersection(products)
+    except SQLAlchemyError as err:
+        print(err)
+        flash('Database error', 'danger')
 
     return render_template('main.html', products=products, title='category_earch')
 
@@ -153,6 +168,8 @@ def categories():
 def search():
     
     s_word = '%{}%'.format(request.args['search'].strip())
+    s_words = request.args['search'].strip().split(' ')
+    
 
     if len(s_word) < 2: 
         flash('Enter at least 2 characters', 'warning')
@@ -215,9 +232,14 @@ def user(id):
 @admin_role.require(http_exception=403)
 def delete_user(id):
 
-    user = Users.query.filter_by(id=id).first()
-    db.session.delete(user)
-    db.session.commit()
+    try: 
+        user = Users.query.filter_by(id=id).first()
+        db.session.delete(user)
+        db.session.commit()
+    except SQLAlchemyError as err:
+        print(err)
+        flash('Database error', 'danger')
+
     return redirect(url_for('users'))
 
 @app.route('/delete_order/<oid>')
@@ -225,14 +247,18 @@ def delete_user(id):
 @admin_role.require(http_exception=403)
 def order(oid):
 
-    order = Orders.query.filter_by(oID=oid).first()
-    includes = order.including.join(Products).all()
-
     del_form = DeleteForm()
 
-    if del_form.is_submitted():
-        db.session.delete(order)
-        db.session.commit()
+    try:
+        order = Orders.query.filter_by(oID=oid).first()
+        includes = order.including.join(Products).all()
+
+        if del_form.is_submitted():
+            db.session.delete(order)
+            db.session.commit()
+    except SQLAlchemyError as err:
+        print(err)
+        flash('Database error', 'danger')
 
     return render_template('order.html', order=order, includes=includes, del_form=del_form, title='Order: {}'.format(order.oID))
 
@@ -273,12 +299,11 @@ def product_details(pid):
             for cat in categories:
                 product.products_cat.remove(cat)
 
-            cats = prod_form.categories.data 
+            cats = prod_form.cats() 
 
-            for name, val in cats.items():
-                if val == True:
-                    cat = Categories.query.filter_by(c_name=name).first()
-                    product.products_cat.append(cat)
+            for name in cats:
+                cat = Categories.query.filter_by(c_name=name).first()
+                product.products_cat.append(cat)
 
             if img != '':
                 if product.image != '':
@@ -368,15 +393,15 @@ def add_product():
             
             db.session.add(product)
     
-            if img != '':
-                images.save(prod_form.upload.data)
-            
             cats = prod_form.categories.data 
 
             for name, val in cats.items():
                 if val == True:
                     cat = Categories.query.filter_by(c_name=name).first()
                     product.products_cat.append(cat)
+
+            if img != '':
+                images.save(prod_form.upload.data)
 
             db.session.commit()
 
@@ -391,9 +416,9 @@ def add_product():
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
-    identity.user = current_user
     if hasattr(current_user, 'u_role'):
         identity.provides.add(RoleNeed(current_user.u_role))
+    identity.user = current_user
 
 @app.errorhandler(403)
 def page_not_found(e):

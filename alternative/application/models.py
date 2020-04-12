@@ -142,7 +142,8 @@ if prod_exists is None:
     db.session.commit()
 
 if admin is None:
-    admin = Users(id='admin', u_password='admin', u_role='admin')
+    admin = Users(id='admin', u_role='admin')
+    admin.set_password('admin')
     db.session.add(admin)
     db.session.commit()
 

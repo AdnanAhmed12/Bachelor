@@ -50,6 +50,15 @@ class ProductForm(FlaskForm):
     upload = FileField('Image:')
     categories = FormField(CatForm)
     submit = SubmitField('ADD')
+
+    def cats(self):
+        cats = self.categories.data
+        c_list = []
+        for key, value in cats.items():
+            if value == True:
+                c_list.append(key)
+                
+        return c_list
     
 class DeleteForm(FlaskForm):
     submit = SubmitField('Delete')
