@@ -4,7 +4,7 @@ import datetime
 import os
 from application.exceptions import UploadError
 from werkzeug.utils import secure_filename
-from passlib.hash import sha256_crypt
+from passlib.hash import pbkdf2_sha256
 
 
 #-----------------------------------------------------User----------------------------------------------------------------
@@ -19,14 +19,17 @@ def welcome():
 
 @app.route('/register', methods=['POST'])
 def register():
-       
-    fields = {'username': request.form["user"].strip(),
-     'password': request.form["password"].strip(),
-     'conf_password': request.form["conf_password"].strip(),
-     'city': request.form["city"].strip(), 
-     'address': request.form["address"].strip(), 
-     'first_name': request.form["first_name"].strip(), 
-     'last_name': request.form["last_name"].strip()}
+    
+    if 'username' in session:
+       return redirect(url_for('main'))
+
+    fields = {'username': request.form.get('user').strip(),
+     'password': request.form.get('password').strip(),
+     'conf_password': request.form.get('conf_password').strip(),
+     'city': request.form.get('city').strip(), 
+     'address': request.form.get('address').strip(), 
+     'first_name': request.form.get('first_name').strip(), 
+     'last_name': request.form.get('last_name').strip()}
     
     resp = validate_input(fields)
 
@@ -40,13 +43,13 @@ def register():
     db = get_db()
     cursor = db.cursor()
     try:
-        cursor.execute(sql, (request.form["user"],
-                            sha256_crypt.hash(request.form["password"]), 
-                            request.form["city"], 
-                            str(request.form["country"]), 
-                            request.form["address"], 
-                            request.form["first_name"], 
-                            request.form["last_name"],
+        cursor.execute(sql, (request.form.get('user'),
+                            pbkdf2_sha256.hash(request.form.get('password')), 
+                            request.form.get('city'), 
+                            str(request.form.get('country')), 
+                            request.form.get('address'), 
+                            request.form.get('first_name'), 
+                            request.form.get('last_name'),
                             'user'))
         db.commit()
     except db_error as err:
@@ -68,25 +71,27 @@ def register():
 @app.route('/login', methods=['POST'])
 def login(): 
 
+    if 'username' in session:
+       return redirect(url_for('main'))
+
     sql = 'SELECT username, u_password, u_role FROM Users WHERE username = %s'
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql, (request.form["log_user"], ))
+        cursor.execute(sql, (request.form.get('log_user'), ))
         row = cursor.fetchone()
     except db_error as err:
         print(err) 
         flash('Database error', 'error')
     finally:
         cursor.close()
-
-    if row is not None and sha256_crypt.verify(request.form["log_password"], row[1]):
+    if row is not None and pbkdf2_sha256.verify(request.form.get('log_password'), row[1]):
         session['username'] = row[0]
         session['role'] = row[2]
         session['items'] = 0
         session['cart'] = dict()
-        return redirect(url_for('main'))
+        return redirect(url_for('welcome'))
     else:
         flash('Wrong username or password', 'error')
         return render_template('welcome.html', title='welcome')
@@ -160,6 +165,10 @@ def product(pid):
 
 @app.route('/add/<pid>', methods=['POST'])
 def add(pid):
+
+    if 'username' not in session:
+       return redirect(url_for('main'))
+
     if pid in session["cart"]:
         session["cart"][pid]["quantity"] += int(request.form["quant"])
         session["cart"][pid]["price"] += int(request.form["price"])*int(request.form["quant"])
@@ -174,6 +183,7 @@ def add(pid):
     
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
+
     if 'username' not in session: 
         return redirect(url_for('welcome'))
 
@@ -185,12 +195,19 @@ def cart():
 
 @app.route('/delete/<pid>', methods=['POST'])
 def delete(pid):
+
+    if 'username' not in session:
+       return redirect(url_for('main'))
+
     session["items"] -= session["cart"][pid]["quantity"]
     del session["cart"][pid]
     return redirect(url_for('cart'))
 
 @app.route('/buy', methods=['POST'])
 def buy():
+
+    if 'username' not in session:
+       return redirect(url_for('main'))
 
     if len(session["cart"]) == 0:
         flash('Your cart is empty', 'info')
@@ -205,7 +222,7 @@ def buy():
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql1, (session["items"], date, request.form["sum"], session["username"]))
+        cursor.execute(sql1, (session["items"], date, request.form.get('sum'), session["username"]))
         oid = cursor.lastrowid
 
         for pid in session["cart"]:
@@ -230,13 +247,24 @@ def search():
     if 'username' not in session: 
         return redirect(url_for('welcome'))
 
-    s_word = request.args["search"].strip()
+    s_words = request.args.get('search').strip().split()
 
-    if len(s_word) < 2: 
-        flash('Enter at least 2 characters', 'info')
-        return render_template('main.html', title='search')
+    sql = 'SELECT pID, p_name, price, image FROM Products WHERE '
 
-    sql = 'SELECT pID, p_name, price, image FROM Products WHERE p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%" OR rel_year LIKE "%{0}%";'.format(s_word)
+    i = 0
+
+    for word in s_words:
+        if len(word) < 2: 
+            flash('Search word must be at least two characters long', 'info')
+            return render_template('main.html', title='search')
+
+        if i == len(s_words) - 1:
+            add_sql = 'p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%" OR rel_year LIKE "%{0}%";'.format(word)
+        else:
+            add_sql = 'p_name LIKE "%{0}%" OR supplier LIKE "%{0}%" OR isbn LIKE "%{0}%" OR rel_year LIKE "%{0}%" OR '.format(word)
+
+        sql += add_sql
+        i += 1
 
     db = get_db()
     cursor = db.cursor()
@@ -259,7 +287,7 @@ def search():
         cursor.close()
 
     if len(products) == 0:
-        flash('No items found with phrase: {}'.format(s_word), 'info')
+        flash('No items found with phrase: {}'.format(request.args["search"]), 'info')
 
     return render_template('main.html', title='search', products=products, role=session["role"])
 
@@ -380,13 +408,19 @@ def user_details(username):
 @app.route('/change_role/<username>', methods=['POST'])
 def change_role(username):
 
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     sql = 'UPDATE Users SET u_role = %s WHERE username = %s'
 
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute(sql, (request.form["role"], username))
+        cursor.execute(sql, (request.form.get('role'), username))
         db.commit()
     except db_error as err:
         db.rollback()
@@ -399,6 +433,12 @@ def change_role(username):
 
 @app.route('/delete_user/<username>', methods=['POST'])
 def delete_user(username):
+
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
 
     sql = 'DELETE FROM Users WHERE username = %s'
 
@@ -491,6 +531,12 @@ def order_details(oID):
 @app.route('/delete_order/<oID>', methods=['POST'])
 def delete_order(oID):
 
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     sql = 'DELETE FROM Orders WHERE oID = %s'
 
     db = get_db()
@@ -506,7 +552,7 @@ def delete_order(oID):
     finally:
         cursor.close()
 
-    flash('Order {} has been deleted'.format(oID))
+    flash('Order {} has been deleted'.format(oID), 'info')
     return redirect(url_for('orders'))
 
 @app.route('/products', methods=['GET', 'POST'])
@@ -593,8 +639,8 @@ def add_product():
 
     if request.method == 'POST':
         
-        sql1 = 'INSERT INTO Products(p_name, supplier, prod_quan, price, rel_year, isbn, image, p_status, p_description)' \
-               'VALUE(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+        sql1 = 'INSERT INTO Products(p_name, supplier, prod_quan, price, rel_year, isbn, p_status, p_description)' \
+               'VALUE(%s, %s, %s, %s, %s, %s, %s, %s);'
         sql2 = 'INSERT INTO belongs(c_name, pID) VALUE(%s, %s);'
         sql3 = 'UPDATE Products SET image = %s WHERE pID = %s'
 
@@ -603,15 +649,14 @@ def add_product():
 
         
         try:
-            cursor.execute(sql1, (request.form["name"],
-                                 request.form["supplier"],
-                                 request.form["quantity"],
-                                 request.form["price"],
-                                 request.form["year"],
-                                 request.form["isbn"],
-                                 '',
-                                 request.form["status"],
-                                 request.form["description"]))
+            cursor.execute(sql1, (request.form.get('name'),
+                                 request.form.get('supplier'),
+                                 request.form.get('quantity'),
+                                 request.form.get('price'),
+                                 request.form.get('year'),
+                                 request.form.get('isbn'),
+                                 request.form.get('status'),
+                                 request.form.get('description')))
             
             pid = cursor.lastrowid
             f = request.files["upload"]
@@ -671,21 +716,21 @@ def update_product(pID):
     cats = request.form.getlist('check')
 
     if f.filename == '':
-        img_name = request.form["image"]
+        img_name = request.form.get('image')
     else :
         extension = os.path.splitext(f.filename)
         img_name = extension[0] + str(pID) + extension[1]
 
     try:
-        cursor.execute(sql1, (request.form["name"],
-                              request.form["supplier"],
-                              request.form["quantity"],
-                              request.form["price"],
-                              request.form["year"],
-                              request.form["isbn"],
+        cursor.execute(sql1, (request.form.get('name'),
+                              request.form.get('supplier'),
+                              request.form.get('quantity'),
+                              request.form.get('price'),
+                              request.form.get('year'),
+                              request.form.get('isbn'),
                               img_name,
-                              request.form["status"],
-                              request.form["description"],
+                              request.form.get('status'),
+                              request.form.get('description'),
                               pID))
         
         cursor.execute(sql2, (pID, ))
@@ -695,7 +740,7 @@ def update_product(pID):
         if f.filename != '':
              if extension[1].lower() in app.config["ALLOWED_EXTENSIONS"]:
                 path = os.path.abspath(os.path.join(app.config["UPLOAD_PATH"], secure_filename(extension[0] + str(pID) + extension[1])))
-                if request.form["image"] != '':
+                if request.form["image"] != 'None':
                     old_path = os.path.abspath(os.path.join(app.config["UPLOAD_PATH"], request.form["image"]))
                     os.remove(old_path)
                 f.save(path)
@@ -729,6 +774,12 @@ def update_product(pID):
 @app.route('/delete_product/<pID>', methods=['POST'])
 def delete_product(pID):
 
+    if 'username' not in session: 
+        return redirect(url_for('welcome'))
+
+    if session["role"] != 'admin':
+        return redirect(url_for('main'))
+
     sql = 'DELETE FROM Products WHERE pID = %s'
 
     db = get_db()
@@ -737,7 +788,7 @@ def delete_product(pID):
     try:
         cursor.execute(sql, (pID, ))
 
-        if request.form["img"] != '':
+        if request.form["img"] != 'None':
             path = os.path.abspath(os.path.join(app.config["UPLOAD_PATH"], request.form["img"]))
             os.remove(path)
 
@@ -774,6 +825,6 @@ def validate_input(fields):
         return 'Password is too short!'
 
     if fields['password'] != fields['conf_password']: 
-        return 'Password not confirmed!'
+        return 'Passwords do not match!'
 
     return None

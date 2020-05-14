@@ -7,7 +7,7 @@
        <h2>Newest Deals</h2>
       {% elif title == 'search'%}
        <h2>Search results</h2>
-       {% else %}
+       {% elif title == 'categories' %}
        <h2>Categories: {% for cat in cats %}{{cat}}, {% endfor %}</h2>
       {% endif %}
         <div id="offers">

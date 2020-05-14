@@ -15,7 +15,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE  IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+CREATE DATABASE IF NOT EXISTS `bachelor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `bachelor`;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `products` (
   `supplier` char(50) DEFAULT NULL,
   `prod_quan` int(11) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
-  `rel_year` char(20) DEFAULT NULL,
+  `rel_year` char(5) DEFAULT NULL,
   `isbn` char(20) DEFAULT NULL,
   `image` char(50) DEFAULT NULL,
   `p_status` char(10) DEFAULT NULL,
