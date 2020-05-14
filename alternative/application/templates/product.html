@@ -5,17 +5,19 @@
   <img class="rounded d-lg-none col-12 mb-4 img-fluid" id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="" width="40%" height="360px">
 <div id="buy_info" class="d-flex mb-5">
   <img class="rounded d-none d-lg-block" id="image" src="{{url_for("static", filename="images/{}".format(product["image"]))}}" alt="" width="40%" height="360px">
-    <div class="d-flex flex-column text-center m-auto">
+    <div class="text-center m-auto">
     <div class="mb-5"><h3>{{product['p_name']}}</h3></div>
     <h3 class="mt-5">Price: {{product['price']}} NOK</h3>
     <form class="mt-5" action="#">
+    <div class="form-group">
     <label for="quan">Quantity:</label>
     <input class="mb-3" id="quan" name="quan" max="9" min="1" step="1" style="width: 40px;" type="number" value="1">
+    </div>
     <input type="hidden" id="pid" name="pid" value="{{product['pID']}}">
     <input type="hidden" id="price" name="price" value="{{product['price']}}">
     <input type="hidden" id="img" name="img" value="{{product['image']}}">
     <input type="hidden" id="name" name="name" value="{{product['p_name']}}">
-    <input type="button" value ="ADD" class="btn btn-success col-12" onclick="addItems();">
+    <input type="button" value ="ADD" class="btn btn-success" style="width: 200px;" onclick="addItems();">
   </form>
   </div>
 </div>

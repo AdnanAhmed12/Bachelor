@@ -42,11 +42,11 @@
             {{prod_form.upload(class_='ml-2')}}
         </div>
         {{prod_form.categories}}
-        {{prod_form.submit(class_='btn btn-success')}}
+        {{prod_form.submit(class_='btn btn-success col-12')}}
      </form>
-     <form class="mt-2" action="{{url_for('delete_product', pid=product['pID'])}}" method="POST">
+     <form class="col-2 m-auto" action="{{url_for('delete_product', pid=product['pID'])}}" method="POST">
         {{del_form.csrf_token}}
-        {{del_form.submit(class_='btn btn-danger')}}
+        {{del_form.submit(class_='btn btn-danger mt-5 col-12')}}
      </form>
     </div>
    </main>

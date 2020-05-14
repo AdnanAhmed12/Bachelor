@@ -4,7 +4,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 belongs = db.Table('belongs', 
-    db.Column('pID', db.Integer, db.ForeignKey('Products.pID'), primary_key=True),
+    db.Column('pID', db.Integer, db.ForeignKey('Products.pID', ondelete='CASCADE'), primary_key=True),
     db.Column('c_name', db.String(30), db.ForeignKey('Categories.c_name'), primary_key=True)
 )   
 
@@ -13,8 +13,8 @@ class Includes(db.Model):
     oID = db.Column(db.Integer, db.ForeignKey('Orders.oID'), primary_key=True)
     pID = db.Column(db.Integer, db.ForeignKey('Products.pID'), primary_key=True)
     quan = db.Column(db.Integer)
-    order_includes = db.relationship('Orders', backref = db.backref('including', lazy='dynamic'))
-    included_products = db.relationship('Products', backref = db.backref('included', lazy='dynamic'))
+    order_includes = db.relationship('Orders', backref = db.backref('including', lazy='dynamic', cascade="all, delete-orphan"))
+    included_products = db.relationship('Products', backref = db.backref('included', lazy='dynamic', cascade="all, delete-orphan"))
 
 class Users(UserMixin, db.Model):
     __tablename__ = 'Users'
@@ -26,7 +26,7 @@ class Users(UserMixin, db.Model):
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
     u_role = db.Column(db.String(10))
-    user_orders = db.relationship('Orders', backref='orders_users')
+    user_orders = db.relationship('Orders', backref='orders_users', lazy='dynamic')
 
     def set_password(self, password):
         self.u_password = generate_password_hash(password)
@@ -40,7 +40,7 @@ class Orders(db.Model):
     num_products = db.Column(db.Integer)
     order_date = db.Column(db.String(20))
     culm_price = db.Column(db.Integer)
-    user = db.Column(db.String(20), db.ForeignKey('Users.id'))
+    user = db.Column(db.String(20), db.ForeignKey('Users.id', ondelete='SET NULL'))
 
 class Products(db.Model):
     __tablename__ = 'Products'
@@ -50,7 +50,7 @@ class Products(db.Model):
     prod_quan = db.Column(db.Integer)
     price = db.Column(db.Integer)
     rel_year = db.Column(db.String(10))
-    isbn = db.Column(db.String(20))
+    isbn = db.Column(db.String(20), unique=True)
     image = db.Column(db.String(50))
     p_status = db.Column(db.String(10))
     p_description = db.Column(db.Text(400))
@@ -107,7 +107,7 @@ if prod_exists is None:
     image='zelda.png', p_status='new', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)
     media.cat_products.append(product)
-    product = Products(p_name='"Electric Screwdriver', supplier='Bosch', prod_quan=250, price=799, rel_year='2016', isbn='943523921-0',
+    product = Products(p_name='Electric Screwdriver', supplier='Bosch', prod_quan=250, price=799, rel_year='2016', isbn='943523921-0',
     image='drill.png', p_status='new', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)
     elec.cat_products.append(product)
@@ -127,7 +127,7 @@ if prod_exists is None:
     db.session.add(product)
     car.cat_products.append(product)
     product = Products(p_name='Blue Shirt Men', supplier='Hugo Boss', prod_quan=210, price=139, rel_year='2018', isbn='842528121-0',
-    image='"shirt.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
+    image='shirt.png', p_status='old', p_description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
     db.session.add(product)
     fash.cat_products.append(product)
     product = Products(p_name='GPS with Dashcam', supplier='Garmin', prod_quan=80, price=799, rel_year='2018', isbn='993123921-0',

@@ -9,50 +9,38 @@
           <ul class="bg-success list-group list-group-flush">
             <li class="list-group-item">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="electronics" value="1" id="check1">
-                <label class="form-check-label" for="check1">
-                  Electronics
-                </label>
+                {{cat_form.Electronics}}
+                {{cat_form.Electronics.label}}
               </div>
             </li>
               <li class="list-group-item">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="home" value="1" id="check2">
-                  <label class="form-check-label" for="check2">
-                    Home
-                  </label>
+                {{cat_form.Home}}
+                {{cat_form.Home.label}}
                 </div>
               </li>
             <li class="list-group-item">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="car" value="1" id="check3">
-                <label class="form-check-label" for="check3">
-                  Car
-                </label>
+                {{cat_form.Car}}
+                {{cat_form.Car.label}}
               </div>
             </li>
           <li class="list-group-item">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="fashion" value="1" id="check4">
-              <label class="form-check-label" for="check4">
-                Fashion
-              </label>
+              {{cat_form.Fashion}}
+              {{cat_form.Fashion.label}}
             </div>
           </li>
           <li class="list-group-item">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="sports" value="1" id="check5">
-              <label class="form-check-label" for="check5">
-                Sports
-              </label>
+              {{cat_form.Sports}}
+              {{cat_form.Sports.label}}
             </div>
           </li>
           <li class="list-group-item">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="media" value="1" id="check6">
-              <label class="form-check-label" for="check6">
-                Media
-              </label>
+              {{cat_form.Media}}
+              {{cat_form.Media.label}}
             </div>
           </li>
           <li class="list-group-item">
@@ -64,7 +52,13 @@
         </form>
 </aside>
 <main class="ml-lg-2 container col-12 col-lg-10">
+  {% if title == 'main' %}
   <h2>Newest Deals</h2>
+  {% elif title == 'search' %}
+  <h2>Search Results</h2>
+  {% elif title == 'category_search' %}
+  <h2>Categories: {% for c in cs %}{{c}}, {% endfor %}</h2>
+  {% endif %}
   <div class="row justify-content-center">
     {% for product in products %}
     <div class="mt-2 col-lg-5">

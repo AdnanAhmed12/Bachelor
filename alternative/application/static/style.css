@@ -47,15 +47,9 @@ main{
 @media (min-width: 992px) {
   #cats{
     position: fixed;
-    top: 200px;
+    top: 170px;
     right: 30px;
     width: 12%
-  }
-}
-
-@media (min-width: 824px){
-  .cart_img{
-    width: 10%;
   }
 }
 
@@ -118,6 +112,7 @@ main h5{
 #total{
   background-color: #52aa5e;
   color: white;
+  width: 100%;
 }
 
 table td{

@@ -4,17 +4,18 @@
 <main class="container col-10">
   <h2>Cart</h2>
   {% for pid, product in products.items() %}
-  <div class="row col-12 align-items-center justify-content-between mt-3 border-bottom border-success">
-    <img class="cart_img mb-2" src="{{url_for('static', filename='images/{}'.format(product['img']))}}" alt="{{product['name']}}">
-    <a href="{{url_for('product', pid=pid)}}" class=""><h5 class="cart_name">{{product['name']}}</h5></a>
-    <h5>&#215;{{product['quantity']}}</h5>
-    <h5>{{product['price']}} NOK</h5>
+  <div id="{{pid}}" class="m-auto row col-12 align-items-center justify-content-between mt-3 border-bottom border-success position-relative">
+    <img class="cart_img mb-2 img-fluid" src="{{url_for('static', filename='images/{}'.format(product['img']))}}" style="height: 200px; width: 250px;" alt="{{product['name']}}">
+    <a href="{{url_for('product', pid=pid)}}" class="text-center" style = "width: 50%;"><h5 class="cart_name">{{product['name']}}</h5></a>
+    <h5 class="text-center" style="width: 30px;">&#215;{{product['quantity']}}</h5>
+    <h5 class="flex-fill text-right">{{product['price']}} NOK</h5>
+    <button id="del" value ="{{sum}}" class="btn btn-danger btn-sm position-absolute" style="top: 0; right: 0;" onclick="deleteItem({{pid}});">&#215;</button>
   </div>
   {% endfor %}
-  <div id="total" class="row col-12 justify-content-end mt-3 pt-1 pb-1">
-    <h5 class="">Total: {{sum}} NOK</h5>
+  <div id="total" class="m-auto row col-12 justify-content-end mt-3 pt-1 pb-1 flex-fill">
+    <h5 id="all">Total: {{sum}} NOK</h5>
   </div>
-  <form action="{{url_for('cart')}}" method="POST" class="p-5 d-flex justify-content-center">
+  <form action="{{url_for('cart')}}" method="POST" class="p-5 d-flex justify-content-center flex-fill">
     {{buy_form.buy(class_='btn btn-md btn-success col-6')}}
   </form>
 </main>

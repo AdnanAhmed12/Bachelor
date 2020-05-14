@@ -31,12 +31,21 @@ class RoleForm(FlaskForm):
     change = SubmitField('Change')
 
 class CatForm(FlaskForm):
-    Electronics = BooleanField('Electronics:')
-    Home = BooleanField('Home:')
-    Car = BooleanField('Car:')
-    Fashion = BooleanField('Fashion:')
-    Sports = BooleanField('Sports:')
-    Media = BooleanField('Media:')
+    Electronics = BooleanField('Electronics')
+    Home = BooleanField('Home')
+    Car = BooleanField('Car')
+    Fashion = BooleanField('Fashion')
+    Sports = BooleanField('Sports')
+    Media = BooleanField('Media')
+
+    def get_all(self):
+        v = vars(self)
+        l = []
+        for i, a in v.items():
+            if hasattr(a, 'data'):
+                if a.data == True:
+                    l.append(i)
+        return l
 
 class ProductForm(FlaskForm):
     name = StringField('Name:')

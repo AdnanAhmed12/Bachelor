@@ -1,15 +1,13 @@
 from application import app, db, admin_role, images
 from flask import render_template, redirect, url_for, flash, session, request, current_app
-from application.forms import LoginForm, RegisterForm, AddForm, BuyForm, RoleForm, ProductForm, DeleteForm
+from application.forms import LoginForm, RegisterForm, AddForm, BuyForm, RoleForm, ProductForm, DeleteForm, CatForm
 from application.models import Users, Products, Orders, Includes, Categories
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import or_
 from flask_login import current_user, logout_user, login_required, login_user
 from flask_principal import identity_loaded, RoleNeed, identity_changed, Identity
 import os
-
-
-
+import datetime
 
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
@@ -27,6 +25,7 @@ def welcome():
                 login_user(user)
                 session['items'] = 0
                 session['cart'] = dict()
+                session['sum'] = 0
                 identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
                 return redirect(url_for('main'))
             flash('User not found', 'warning')
@@ -57,9 +56,11 @@ def register():
             flash('Registration succesfull', 'success')
             return redirect(url_for('welcome'))
         except IntegrityError as err:
+            db.session.rollback()
             print(err)
             flash('User alredy exists', 'warning')  
         except SQLAlchemyError as err:
+            db.session.rollback()
             print(err)
             flash('Database error')
       
@@ -69,13 +70,14 @@ def register():
 @login_required
 def main():
 
+    cat_form = CatForm()
     try:
         products = Products.query.filter_by(p_status = 'new').all()
     except SQLAlchemyError as err:
         print(err)
         flash('Database error', 'danger')
 
-    return render_template('main.html', products=products, title='main')
+    return render_template('main.html', products=products, cat_form=cat_form, title='main')
 
 @app.route('/product/<pid>', methods=['GET', 'POST'])
 @login_required
@@ -83,6 +85,10 @@ def product(pid):
 
     try:
         product = Products.query.filter_by(pID = pid).first()
+
+        if product == None:
+            return redirect(url_for('main'))
+
     except SQLAlchemyError as err:
         print(err)
         flash('Database error', 'danger')
@@ -92,7 +98,6 @@ def product(pid):
 @app.route('/add', methods=['POST'])
 @login_required
 def add():
-    print('Start')
     quan = request.form.get('quan', None)
     pid =  request.form.get('pid', None)
     price =  request.form.get('price', None)
@@ -102,12 +107,13 @@ def add():
     if pid in session["cart"]:
         session['cart'][pid]['quantity'] += int(quan)
         session['cart'][pid]['price'] += int(price)*int(quan)
+        session['sum'] += int(price)*int(quan)
     else:
         session['cart'].update({pid:{'quantity':int(quan),
                                     'name': name,
                                     'price': int(price)*int(quan),
                                     'img':img}})
-        
+        session['sum'] += int(price)*int(quan)
     session["items"] += int(quan)
     
     return '{}'.format(session["items"])
@@ -117,15 +123,13 @@ def add():
 def cart():
 
     buy_form = BuyForm()
-    sum = 0
-
-    for product in session['cart'].values():
-        sum += product['price']
 
     if buy_form.is_submitted():
 
+        date = datetime.datetime.today().strftime('%d-%m-%Y')
+
         try:
-            order = Orders(num_products=session['items'], order_date='12/12/20', culm_price=sum, user=current_user.id)
+            order = Orders(num_products=session['items'], order_date=date, culm_price=session['sum'], user=current_user.id)
             db.session.add(order)
             
             for pid in session['cart']:
@@ -136,20 +140,36 @@ def cart():
             db.session.commit()
             session['cart'] = dict()
             session['items'] = 0
+            session['sum'] = 0
             flash('Transaction succesfull. Your order ID is {}'.format(order.oID), 'info')
             return redirect(url_for('main'))
         except SQLAlchemyError as err:
-            flash('Database error', 'danger')
+            db.session.rollback()
             print(err)
+            flash('Database error', 'danger')
 
-    return render_template('cart.html', products=session['cart'], sum=sum, buy_form=buy_form, title='cart')
+    return render_template('cart.html', products=session['cart'], sum=session['sum'], buy_form=buy_form, title='cart')
 
+@app.route('/delete/<pid>')
+@login_required
+def delete(pid):
+    try:
+        session["items"] -= session["cart"][pid]["quantity"]
+        session['sum'] -= session["cart"][pid]["price"]
+        del session["cart"][pid]
+        return '{},{}'.format(session["items"], session['sum'])
+    except KeyError as err:
+        print(err)
+        return redirect(url_for('main'))
+        
 @app.route('/categories')
 @login_required
 def categories():
-
+    
+    cat_form = CatForm(request.args)
     try:
-        cats = iter(request.args.to_dict())
+        cs = cat_form.get_all()
+        cats = iter(cat_form.get_all())
         category = Categories.query.filter_by(c_name=next(cats)).first()
         products = set(category.cat_products)
     
@@ -161,34 +181,45 @@ def categories():
         print(err)
         flash('Database error', 'danger')
 
-    return render_template('main.html', products=products, title='category_earch')
+    return render_template('main.html', products=products, cs=cs, cat_form=cat_form, title='category_search')
 
 @app.route('/search')
 @login_required
 def search():
-    
-    s_word = '%{}%'.format(request.args['search'].strip())
+    cat_form = CatForm()
     s_words = request.args['search'].strip().split(' ')
+    products = []
+    for s_word in s_words:
+
+        if len(s_word) < 2: 
+            flash('Enter at least 2 characters', 'warning')
+            return redirect(url_for('main'))
+
+        s_word = '%{}%'.format(s_word)
+
+        try:
+            prods = Products.query.filter(or_(Products.p_name.ilike(s_word), Products.isbn.ilike(s_word), Products.rel_year.ilike(s_word), Products.p_description.ilike(s_word))).all()
+        except SQLAlchemyError as err:
+            flash('Database error', 'danger')
+            print(err)
+            
+        products += prods
     
+    products = set(products)
 
-    if len(s_word) < 2: 
-        flash('Enter at least 2 characters', 'warning')
-        return render_template('main.html', title='search')
+    return render_template('main.html', products=products, cat_form=cat_form, title='search')
 
-    try:
-        products = Products.query.filter(or_(Products.p_name.ilike(s_word), Products.isbn.ilike(s_word), Products.rel_year.ilike(s_word), Products.p_description.ilike(s_word))).all()
-    except SQLAlchemyError as err:
-        flash('Database error', 'danger')
-        print(err)
-
-    return render_template('main.html', products=products, title='search')
+#----------------------------------------------------Admin-----------------------------------------------------------------
 
 @app.route('/users')
 @login_required
 @admin_role.require(http_exception=403)
 def users():
-
-    users = Users.query.all()
+    try:
+        users = Users.query.all()
+    except SQLAlchemyError as err: 
+        print(err)
+        flash('Database error', 'danger')
 
     return render_template('list.html', users=users, title='users')
 
@@ -197,8 +228,11 @@ def users():
 @admin_role.require(http_exception=403)
 def orders():
 
-    orders = Orders.query.all()
-
+    try:
+        orders = Orders.query.all()
+    except SQLAlchemyError as err: 
+        print(err)
+        flash('Database error', 'danger')
     return render_template('list.html', orders=orders, title='orders')
 
 @app.route('/products')
@@ -206,8 +240,11 @@ def orders():
 @admin_role.require(http_exception=403)
 def products():
 
-    products = Products.query.all()
-
+    try:
+        products = Products.query.all()
+    except SQLAlchemyError as err: 
+        print(err)
+        flash('Database error', 'danger')
     return render_template('list.html', products=products, title='products')
 
 @app.route('/user/<id>', methods=['GET', 'POST'])
@@ -221,9 +258,14 @@ def user(id):
     del_form = DeleteForm()
 
     if role_form.validate_on_submit():
-        user.u_role = role_form.role.data
-        db.session.add(user)
-        db.session.commit()
+        try:
+            user.u_role = role_form.role.data
+            db.session.add(user)
+            db.session.commit()
+        except SQLAlchemyError as err:
+            db.session.rollback()
+            print(err)
+            flash('Database error', 'danger')
     
     return render_template('user.html', user=user, role_form=role_form, del_form=del_form, title='{}'.format(user.id))
 
@@ -237,12 +279,14 @@ def delete_user(id):
         db.session.delete(user)
         db.session.commit()
     except SQLAlchemyError as err:
+        db.session.rollback()
         print(err)
         flash('Database error', 'danger')
 
+    flash('User {} has been deleted'.format(id), 'info')
     return redirect(url_for('users'))
 
-@app.route('/delete_order/<oid>')
+@app.route('/order/<oid>', methods=['GET','POST'])
 @login_required 
 @admin_role.require(http_exception=403)
 def order(oid):
@@ -256,7 +300,10 @@ def order(oid):
         if del_form.is_submitted():
             db.session.delete(order)
             db.session.commit()
+            flash('Order {} has been deleted'.format(oid), 'info')
+            return redirect(url_for('orders'))
     except SQLAlchemyError as err:
+        db.session.rollback()
         print(err)
         flash('Database error', 'danger')
 
@@ -317,9 +364,11 @@ def product_details(pid):
             categories = product.products_cat.all()
 
         except SQLAlchemyError as err:
+            db.session.rollback()
             print(err)
             flash('Database error', 'danger')
         except IOError as err:
+            db.session.rollback()
             print(err)
             flash('File error', 'danger')
 
@@ -363,14 +412,17 @@ def delete_product(pid):
             os.remove(path)
 
         db.session.commit()
-        return redirect(url_for('products'))
+        flash('Product {} has been deleted'.format(pid), 'info')
     except SQLAlchemyError as err:
+            db.session.rollback()
             print(err)
             flash('Database error', 'danger')
     except IOError as err:
+            db.session.rollback()
             print(err)
             flash('File error', 'danger')
 
+    return redirect(url_for('products'))
 
 @app.route('/add_product', methods=['GET', 'POST'])
 @login_required 
@@ -393,22 +445,27 @@ def add_product():
             
             db.session.add(product)
     
-            cats = prod_form.categories.data 
+            cats = prod_form.cats()
 
-            for name, val in cats.items():
-                if val == True:
-                    cat = Categories.query.filter_by(c_name=name).first()
-                    product.products_cat.append(cat)
+            for name in cats:
+                cat = Categories.query.filter_by(c_name=name).first()
+                product.products_cat.append(cat)
 
             if img != '':
                 images.save(prod_form.upload.data)
 
             db.session.commit()
-
+            flash('Product has been added')
+        except IntegrityError as err:
+            db.session.rollback()
+            print(err)
+            flash('Duplicate ISBN', 'danger')
         except SQLAlchemyError as err:
+            db.session.rollback()
             print(err)
             flash('Database error', 'danger')
         except IOError as err:
+            db.session.rollback()
             print(err)
             flash('File error', 'danger')
 
